@@ -5,7 +5,6 @@ import static ca.warp7.robot.Constants.GEAR_CHANGE;
 import static ca.warp7.robot.Constants.LEFT_DRIVE_ENCODER_A;
 import static ca.warp7.robot.Constants.LEFT_DRIVE_ENCODER_B;
 import static ca.warp7.robot.Constants.LEFT_DRIVE_MOTOR_PINS;
-import static ca.warp7.robot.Constants.PTO_SOLENOID;
 import static ca.warp7.robot.Constants.RIGHT_DRIVE_ENCODER_A;
 import static ca.warp7.robot.Constants.RIGHT_DRIVE_ENCODER_B;
 import static ca.warp7.robot.Constants.RIGHT_DRIVE_MOTOR_PINS;
@@ -20,23 +19,22 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.VictorSP;
 
 public class Drive{
+	
 	// https://code.google.com/p/3647robotics/source/browse/WCDRobot/src/Robot/DriveTrain.java?r=63
 	private static MotorGroup rightDrive;
 	private static MotorGroup leftDrive;
 	public Encoder leftEncoder;
 	public Encoder rightEncoder;
-
 	private static Solenoid shifter;
-	private static Solenoid PTO;
 	public ADXRS450_Gyro gyro;
 	private DataPool pool;
 	private double leftRamp = 0.0;
 	private double rightRamp = 0.0;
-
 	private double quickstop_accumulator = 0;
 	private double old_wheel = 0;
     private boolean isDrivetrainReversed = false;
 
+    
     public Drive() {
 		pool = new DataPool("Drive");
 
@@ -44,12 +42,10 @@ public class Drive{
 		rightDrive = new MotorGroup(RIGHT_DRIVE_MOTOR_PINS, VictorSP.class);
 		rightDrive.setInverted(true);
 		leftDrive = new MotorGroup(LEFT_DRIVE_MOTOR_PINS, VictorSP.class);
-//			leftDrive.setInverted(true);
+		//leftDrive.setInverted(true);
 
         shifter = new Solenoid(GEAR_CHANGE); // actually ear change
-		PTO = new Solenoid(PTO_SOLENOID); // actually pto
 		shifter.set(false);
-		PTO.set(false);
 		
 		leftEncoder =  new Encoder(LEFT_DRIVE_ENCODER_A, LEFT_DRIVE_ENCODER_B, false, EncodingType.k4X);
 		rightEncoder = new Encoder(RIGHT_DRIVE_ENCODER_A, RIGHT_DRIVE_ENCODER_B, false, EncodingType.k4X);
