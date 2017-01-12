@@ -1,13 +1,14 @@
 package ca.warp7.robot.subsystems;
 
 import static ca.warp7.robot.Constants.DRIVE_METERS_PER_TICK;
-import static ca.warp7.robot.Constants.GEAR_CHANGE;
+import static ca.warp7.robot.Constants.GEAR_SHIFTER_PORT;
 import static ca.warp7.robot.Constants.LEFT_DRIVE_ENCODER_A;
 import static ca.warp7.robot.Constants.LEFT_DRIVE_ENCODER_B;
 import static ca.warp7.robot.Constants.LEFT_DRIVE_MOTOR_PINS;
 import static ca.warp7.robot.Constants.RIGHT_DRIVE_ENCODER_A;
 import static ca.warp7.robot.Constants.RIGHT_DRIVE_ENCODER_B;
 import static ca.warp7.robot.Constants.RIGHT_DRIVE_MOTOR_PINS;
+import static ca.warp7.robot.Constants.DROP_DOWN_MOTOR_PINS;
 
 import ca.warp7.robot.MotorGroup;
 import ca.warp7.robot.Util;
@@ -20,44 +21,46 @@ import edu.wpi.first.wpilibj.VictorSP;
 
 public class Drive{
 	
-	// https://code.google.com/p/3647robotics/source/browse/WCDRobot/src/Robot/DriveTrain.java?r=63
-	private static MotorGroup rightDrive;
-	private static MotorGroup leftDrive;
-	public Encoder leftEncoder;
-	public Encoder rightEncoder;
-	private static Solenoid shifter;
-	public ADXRS450_Gyro gyro;
+	private MotorGroup rightDrive;
+	private MotorGroup leftDrive;
+	private MotorGroup dropDrive;
+	private Encoder leftEncoder;
+	private Encoder rightEncoder;
+	private Solenoid shifter;
+	private ADXRS450_Gyro gyro;
 	private DataPool pool;
 	private double leftRamp = 0.0;
 	private double rightRamp = 0.0;
 	private double quickstop_accumulator = 0;
 	private double old_wheel = 0;
     private boolean isDrivetrainReversed = false;
-
+    
     
     public Drive() {
 		pool = new DataPool("Drive");
 
-		// Hardware components
+		// setup drive train motors
 		rightDrive = new MotorGroup(RIGHT_DRIVE_MOTOR_PINS, VictorSP.class);
 		rightDrive.setInverted(true);
 		leftDrive = new MotorGroup(LEFT_DRIVE_MOTOR_PINS, VictorSP.class);
-		//leftDrive.setInverted(true);
+		dropDrive = new MotorGroup(DROP_DOWN_MOTOR_PINS, VictorSP.class);
 
-        shifter = new Solenoid(GEAR_CHANGE); // actually ear change
+		// setup drive train gear shifter
+        shifter = new Solenoid(GEAR_SHIFTER_PORT);
 		shifter.set(false);
 		
+		// setup drive train encoders
 		leftEncoder =  new Encoder(LEFT_DRIVE_ENCODER_A, LEFT_DRIVE_ENCODER_B, false, EncodingType.k4X);
 		rightEncoder = new Encoder(RIGHT_DRIVE_ENCODER_A, RIGHT_DRIVE_ENCODER_B, false, EncodingType.k4X);
-		
 		leftEncoder.setDistancePerPulse(DRIVE_METERS_PER_TICK);
 		rightEncoder.setDistancePerPulse(DRIVE_METERS_PER_TICK);
+		
+		// setup gyro
 		gyro = new ADXRS450_Gyro();
 	}
 
-
 	public void setGear(boolean gear) {
-		shifter.set(gear); // TODO gear pto swap
+		shifter.set(gear);
 	}
 
 	public void tankDrive(double left, double right) {
@@ -66,7 +69,7 @@ public class Drive{
 		moveRamped(left, right);
 	}
 
-	public void cheesyDrive(double wheel, double throttle, boolean quickturn) {
+	public void cheesyDrive(double wheel, double throttle, boolean quickturn, boolean dropDown) {
 		/*
 		 * Poofs! :param wheel: The speed that the robot should turn in the X
 		 * direction. 1 is right [-1.0..1.0] :param throttle: The speed that the
@@ -75,15 +78,14 @@ public class Drive{
 		 */
 		throttle = Util.deadband(throttle);
 		wheel = Util.deadband(wheel);
-		if(isDrivetrainReversed){
+		if(isDrivetrainReversed)
 			wheel*=-1;
-		}
 		double right_pwm;
 		double left_pwm;
 		double neg_inertia_scalar;
 		double neg_inertia = wheel - old_wheel;
 		old_wheel = wheel;
-		wheel = Util.sinScale(wheel, 0.8f, 3);
+		wheel = Util.sinScale(wheel, 0.8f, 3, 0.6);
 
 		if (wheel * neg_inertia > 0) {
 			neg_inertia_scalar = 2.5f;
@@ -113,6 +115,13 @@ public class Drive{
             angular_power = throttle * wheel * sensitivity - quickstop_accumulator;
 			quickstop_accumulator = Util.wrap_accumulator(quickstop_accumulator);
 		}
+		
+		if(dropDown && !quickturn){
+			dropDrive.set(Util.limit(wheel, 1.0));
+		}else{
+			dropDrive.set(0.0);
+		}
+		
 		right_pwm = left_pwm = throttle;
 
 		left_pwm += angular_power;
@@ -169,10 +178,7 @@ public class Drive{
 		pool.logDouble("gyro_angle", getRotation());
 		pool.logDouble("left_enc", leftEncoder.getDistance());
 		pool.logDouble("right_enc", rightEncoder.getDistance());
-		pool.logDouble("left_ramp", leftRamp);
-		pool.logDouble("right_ramp", rightRamp);
 	}
-
 
     public void setDrivetrainReversed(boolean reversed) {
         isDrivetrainReversed = reversed;

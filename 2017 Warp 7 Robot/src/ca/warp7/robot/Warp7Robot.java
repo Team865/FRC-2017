@@ -1,5 +1,6 @@
 package ca.warp7.robot;
 
+import ca.warp7.robot.controls.DefaultControls;
 import ca.warp7.robot.networking.DataPool;
 import ca.warp7.robot.subsystems.Drive;
 import edu.wpi.first.wpilibj.SampleRobot;

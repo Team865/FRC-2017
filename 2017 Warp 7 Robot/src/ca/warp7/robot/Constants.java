@@ -2,8 +2,9 @@ package ca.warp7.robot;
 
 public class Constants {
 	// PWM Pins
-	public static final int[] LEFT_DRIVE_MOTOR_PINS = { 0, 1 };
-	public static final int[] RIGHT_DRIVE_MOTOR_PINS = { 2, 3 };
+	public static final int[] RIGHT_DRIVE_MOTOR_PINS = { 0, 1 };
+	public static final int[] LEFT_DRIVE_MOTOR_PINS = { 2, 3 };
+	public static final int[] DROP_DOWN_MOTOR_PINS = { 4 };
 
 	// DIG Pins
 	public static final int LEFT_DRIVE_ENCODER_A = 0;
@@ -12,7 +13,7 @@ public class Constants {
 	public static final int RIGHT_DRIVE_ENCODER_B = 3;
 	
 	// Solenoids (manifold ports)
-	public static final int GEAR_CHANGE = 0;
+	public static final int GEAR_SHIFTER_PORT = 0;
 
 	// Robot dimensions and stuff
 	public static double WHEELBASE_WIDTH = 24; // inches
