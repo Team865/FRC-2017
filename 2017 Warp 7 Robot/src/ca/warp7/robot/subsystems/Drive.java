@@ -1,6 +1,7 @@
 package ca.warp7.robot.subsystems;
 
 import static ca.warp7.robot.Constants.DRIVE_METERS_PER_TICK;
+import static ca.warp7.robot.Constants.DROP_DOWN_MOTOR_PINS;
 import static ca.warp7.robot.Constants.GEAR_SHIFTER_PORT;
 import static ca.warp7.robot.Constants.LEFT_DRIVE_ENCODER_A;
 import static ca.warp7.robot.Constants.LEFT_DRIVE_ENCODER_B;
@@ -8,7 +9,6 @@ import static ca.warp7.robot.Constants.LEFT_DRIVE_MOTOR_PINS;
 import static ca.warp7.robot.Constants.RIGHT_DRIVE_ENCODER_A;
 import static ca.warp7.robot.Constants.RIGHT_DRIVE_ENCODER_B;
 import static ca.warp7.robot.Constants.RIGHT_DRIVE_MOTOR_PINS;
-import static ca.warp7.robot.Constants.DROP_DOWN_MOTOR_PINS;
 
 import ca.warp7.robot.MotorGroup;
 import ca.warp7.robot.Util;
@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.VictorSP;
 
 public class Drive{
@@ -43,7 +44,7 @@ public class Drive{
 		rightDrive = new MotorGroup(RIGHT_DRIVE_MOTOR_PINS, VictorSP.class);
 		rightDrive.setInverted(true);
 		leftDrive = new MotorGroup(LEFT_DRIVE_MOTOR_PINS, VictorSP.class);
-		dropDrive = new MotorGroup(DROP_DOWN_MOTOR_PINS, VictorSP.class);
+		dropDrive = new MotorGroup(DROP_DOWN_MOTOR_PINS, Talon.class);
 
 		// setup drive train gear shifter
         shifter = new Solenoid(GEAR_SHIFTER_PORT);
@@ -76,6 +77,7 @@ public class Drive{
 		 * robot should drive in the Y direction. -1 is forward. [-1.0..1.0]
 		 * :param quickturn: If the robot should drive arcade-drive style
 		 */
+		double rawWheel = wheel;
 		throttle = Util.deadband(throttle);
 		wheel = Util.deadband(wheel);
 		if(isDrivetrainReversed)
@@ -117,7 +119,10 @@ public class Drive{
 		}
 		
 		if(dropDown && !quickturn){
-			dropDrive.set(Util.limit(wheel, 1.0));
+			// TODO temp for climber
+			//dropDrive.set(Util.limit(wheel, 1.0));
+			if(rawWheel >= 0.8)rawWheel = 1.0;
+			dropDrive.set(rawWheel);
 		}else{
 			dropDrive.set(0.0);
 		}
