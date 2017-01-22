@@ -171,8 +171,8 @@ public class Drive{
 	}
 
 	public void autoMove(double left, double right) {
-		leftDrive.set(left);
-		rightDrive.set(right);
+		leftDrive.set(Math.min(1, Math.max(-1, left)));
+		rightDrive.set(Math.min(1, Math.max(-1, right)));
 	}
 
 	public double getRotation() {

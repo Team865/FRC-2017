@@ -15,6 +15,9 @@ public class Constants {
 	// Solenoids (manifold ports)
 	public static final int GEAR_SHIFTER_PORT = 0;
 
+	// CAN ID's
+	public static final int SHOOTER_CAN_ID = 0;
+	
 	// Robot dimensions and stuff
 	public static double WHEELBASE_WIDTH = 24; // inches
 	public static double WHEEL_DIAMETER = 8; // inches
