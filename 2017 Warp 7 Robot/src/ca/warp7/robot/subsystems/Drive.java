@@ -1,8 +1,7 @@
 package ca.warp7.robot.subsystems;
 
 import static ca.warp7.robot.Constants.DRIVE_METERS_PER_TICK;
-import static ca.warp7.robot.Constants.DROP_DOWN_MOTOR_PINS;
-import static ca.warp7.robot.Constants.GEAR_SHIFTER_PORT;
+import static ca.warp7.robot.Constants.DRIVE_SHIFTER_PORT;
 import static ca.warp7.robot.Constants.LEFT_DRIVE_ENCODER_A;
 import static ca.warp7.robot.Constants.LEFT_DRIVE_ENCODER_B;
 import static ca.warp7.robot.Constants.LEFT_DRIVE_MOTOR_PINS;
@@ -17,14 +16,12 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.VictorSP;
 
 public class Drive{
 	
 	private MotorGroup rightDrive;
 	private MotorGroup leftDrive;
-	private MotorGroup dropDrive;
 	private Encoder leftEncoder;
 	private Encoder rightEncoder;
 	private Solenoid shifter;
@@ -44,10 +41,9 @@ public class Drive{
 		rightDrive = new MotorGroup(RIGHT_DRIVE_MOTOR_PINS, VictorSP.class);
 		rightDrive.setInverted(true);
 		leftDrive = new MotorGroup(LEFT_DRIVE_MOTOR_PINS, VictorSP.class);
-		dropDrive = new MotorGroup(DROP_DOWN_MOTOR_PINS, Talon.class);
 
 		// setup drive train gear shifter
-        shifter = new Solenoid(GEAR_SHIFTER_PORT);
+        shifter = new Solenoid(DRIVE_SHIFTER_PORT);
 		shifter.set(false);
 		
 		// setup drive train encoders
@@ -70,14 +66,13 @@ public class Drive{
 		moveRamped(left, right);
 	}
 
-	public void cheesyDrive(double wheel, double throttle, boolean quickturn, boolean dropDown) {
+	public void cheesyDrive(double wheel, double throttle, boolean quickturn, boolean shift) {
 		/*
 		 * Poofs! :param wheel: The speed that the robot should turn in the X
 		 * direction. 1 is right [-1.0..1.0] :param throttle: The speed that the
 		 * robot should drive in the Y direction. -1 is forward. [-1.0..1.0]
 		 * :param quickturn: If the robot should drive arcade-drive style
 		 */
-		double rawWheel = wheel;
 		throttle = Util.deadband(throttle);
 		wheel = Util.deadband(wheel);
 		if(isDrivetrainReversed)
@@ -118,13 +113,12 @@ public class Drive{
 			quickstop_accumulator = Util.wrap_accumulator(quickstop_accumulator);
 		}
 		
-		if(dropDown && !quickturn){
-			// TODO temp for climber
-			//dropDrive.set(Util.limit(wheel, 1.0));
-			if(rawWheel >= 0.8)rawWheel = 1.0;
-			dropDrive.set(rawWheel);
+		if(shift){
+			if(!shifter.get())
+				shifter.set(true);
 		}else{
-			dropDrive.set(0.0);
+			if(shifter.get())
+				shifter.set(false);
 		}
 		
 		right_pwm = left_pwm = throttle;

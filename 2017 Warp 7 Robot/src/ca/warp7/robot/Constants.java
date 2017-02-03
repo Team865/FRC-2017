@@ -4,7 +4,6 @@ public class Constants {
 	// PWM Pins
 	public static final int[] RIGHT_DRIVE_MOTOR_PINS = { 0, 1 };
 	public static final int[] LEFT_DRIVE_MOTOR_PINS = { 2, 3 };
-	public static final int[] DROP_DOWN_MOTOR_PINS = { 4, 5 };
 
 	// DIG Pins
 	public static final int LEFT_DRIVE_ENCODER_A = 0;
@@ -13,7 +12,11 @@ public class Constants {
 	public static final int RIGHT_DRIVE_ENCODER_B = 3;
 	
 	// Solenoids (manifold ports)
-	public static final int GEAR_SHIFTER_PORT = 0;
+	public static final int DRIVE_SHIFTER_PORT = 0;
+	public static final int GEAR_PISTON_PORT = 1;
+	
+	// Compressor
+	public static final int COMPRESSOR_PIN = 0;
 
 	// CAN ID's
 	public static final int SHOOTER_CAN_ID = 0;
