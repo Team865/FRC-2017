@@ -82,7 +82,7 @@ public class Drive{
 		double neg_inertia_scalar;
 		double neg_inertia = wheel - old_wheel;
 		old_wheel = wheel;
-		wheel = Util.sinScale(wheel, 0.8f, 3, 0.6);
+		wheel = Util.sinScale(wheel, 0.9f, 1, 0.6f);
 
 		if (wheel * neg_inertia > 0) {
 			neg_inertia_scalar = 2.5f;
