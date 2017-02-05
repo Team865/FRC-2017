@@ -20,7 +20,7 @@ public class GearMech {
 	}
 	
 	public void release(){
-		if(!isHolding())
+		if(isHolding())
 			pistons.set(false);
 	}
 	

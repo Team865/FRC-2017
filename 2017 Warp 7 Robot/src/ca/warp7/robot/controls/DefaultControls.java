@@ -42,7 +42,7 @@ public class DefaultControls extends ControlsBase{
 			if(rightStick)
 				rightStick = false;
 		
-		if(driver.getTriggerAxis(Hand.kRight) >= 0.5){
+		if(Math.abs(driver.getTriggerAxis(Hand.kRight)) >= 0.5){
 			gearMech.release();
 		}else{
 			gearMech.hold();
@@ -54,8 +54,7 @@ public class DefaultControls extends ControlsBase{
 				back_op = true;
 			}
 		}else{
-			if(back_op)
-				back_op = false;
+			back_op = false;
 		}
 		
 		drive.cheesyDrive(-driver.getX(Hand.kRight), driver.getY(Hand.kLeft), driver.getBumper(Hand.kLeft), driver.getBumper(Hand.kRight));

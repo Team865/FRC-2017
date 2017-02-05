@@ -12,8 +12,8 @@ public class Constants {
 	public static final int RIGHT_DRIVE_ENCODER_B = 3;
 	
 	// Solenoids (manifold ports)
-	public static final int DRIVE_SHIFTER_PORT = 0;
-	public static final int GEAR_PISTON_PORT = 1;
+	public static final int DRIVE_SHIFTER_PORT = 1;
+	public static final int GEAR_PISTON_PORT = 0;
 	
 	// Compressor
 	public static final int COMPRESSOR_PIN = 0;
