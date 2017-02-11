@@ -25,6 +25,7 @@ public class GearMech {
 	}
 	
 	public boolean isHolding(){
-		return pistons.get();
+		return false;
+		//return pistons.get();
 	}
 }

@@ -3,7 +3,7 @@ package ca.warp7.robot;
 import static ca.warp7.robot.Constants.COMPRESSOR_PIN;
 
 import ca.warp7.robot.auto.AutonomousBase;
-import ca.warp7.robot.auto.RapidFire;
+import ca.warp7.robot.auto.VISION;
 import ca.warp7.robot.controls.DefaultControls;
 import ca.warp7.robot.networking.DataPool;
 import ca.warp7.robot.subsystems.Climber;
@@ -65,14 +65,14 @@ public class Warp7Robot extends SampleRobot{
 	
 	public void autonomous(){
 		
-		//auto = new VISION();
-		auto = new RapidFire();
+		auto = new VISION();
+		//auto = new RapidFire();
 		
 		while (isAutonomous() && isEnabled()) {
-			//auto.periodic(drive, shooter);
+			auto.periodic(drive, gearMech, climber);
 			
-			 slowPeriodic();
-			 Timer.delay(0.005);
+			slowPeriodic();
+			Timer.delay(0.005);
 		}
 	}
 	

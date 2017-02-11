@@ -3,8 +3,9 @@ package ca.warp7.robot.auto;
 import static ca.warp7.robot.Warp7Robot.piCommand;
 
 import ca.warp7.robot.networking.DataPool;
+import ca.warp7.robot.subsystems.Climber;
 import ca.warp7.robot.subsystems.Drive;
-import ca.warp7.robot.subsystems.Shooter;
+import ca.warp7.robot.subsystems.GearMech;
 
 public class VISION extends AutonomousBase {
 
@@ -16,7 +17,7 @@ public class VISION extends AutonomousBase {
 	}
 	
 	@Override
-	public void periodic(Drive drive, Shooter shooter) {
+	public void periodic(Drive drive, GearMech gearMech, Climber climber) {
 		switch(step){
 		case 1:
 			piCommand = "forward";
@@ -26,7 +27,7 @@ public class VISION extends AutonomousBase {
 	}
 
 	@Override
-	public void reset(Drive drive, Shooter shooter) {
+	public void reset(Drive drive, GearMech gearMech, Climber climber) {
 		drive.autoMove(0, 0);
 	}
 

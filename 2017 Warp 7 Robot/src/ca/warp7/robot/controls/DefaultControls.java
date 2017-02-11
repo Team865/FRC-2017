@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import static ca.warp7.robot.Warp7Robot.drive;
 import static ca.warp7.robot.Warp7Robot.gearMech;
 import static ca.warp7.robot.Warp7Robot.compressor;
+import static ca.warp7.robot.Warp7Robot.climber;
 
 public class DefaultControls extends ControlsBase{
 
@@ -48,6 +49,12 @@ public class DefaultControls extends ControlsBase{
 			gearMech.hold();
 		}
 		
+		if(driver.getYButton()){
+			climber.requestSpeed(-1.0);
+		}else{
+			climber.requestSpeed(0.0);
+		}
+		
 		if(operator.getBackButton()){
 			if(!back_op){
 				compressor.setClosedLoopControl(!compressor.getClosedLoopControl());
@@ -57,7 +64,7 @@ public class DefaultControls extends ControlsBase{
 			back_op = false;
 		}
 		
-		drive.cheesyDrive(-driver.getX(Hand.kRight), driver.getY(Hand.kLeft), driver.getBumper(Hand.kLeft), driver.getBumper(Hand.kRight));
+		drive.cheesyDrive(-driver.getX(Hand.kRight), driver.getY(Hand.kLeft), driver.getBumper(Hand.kLeft), driver.getTriggerAxis(Hand.kLeft) >= 0.5, driver.getBumper(Hand.kRight));
 	}
 
 	@Override

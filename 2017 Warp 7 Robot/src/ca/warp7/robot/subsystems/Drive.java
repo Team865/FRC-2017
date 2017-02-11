@@ -66,7 +66,7 @@ public class Drive{
 		moveRamped(left, right);
 	}
 
-	public void cheesyDrive(double wheel, double throttle, boolean quickturn, boolean shift) {
+	public void cheesyDrive(double wheel, double throttle, boolean quickturn, boolean altQuickturn, boolean shift) {
 		/*
 		 * Poofs! :param wheel: The speed that the robot should turn in the X
 		 * direction. 1 is right [-1.0..1.0] :param throttle: The speed that the
@@ -82,7 +82,7 @@ public class Drive{
 		double neg_inertia_scalar;
 		double neg_inertia = wheel - old_wheel;
 		old_wheel = wheel;
-		wheel = Util.sinScale(wheel, 0.9f, 1, 0.6f);
+		wheel = Util.sinScale(wheel, 0.9f, 1, 0.9f);
 
 		if (wheel * neg_inertia > 0) {
 			neg_inertia_scalar = 2.5f;
@@ -99,13 +99,20 @@ public class Drive{
 		wheel += neg_inertia_accumulator;
 
 		double over_power, angular_power;
-		if (quickturn) {
+		if(altQuickturn){
+			if(Math.abs(throttle) < 0.2){
+				double alpha = .1f;
+				quickstop_accumulator = (1-alpha)*quickstop_accumulator+alpha*Util.limit(wheel, 1.0)*5;
+			}
+			over_power = - wheel * .75;
+			angular_power = -wheel * 1;
+		}else if (quickturn) {
 			if (Math.abs(throttle) < 0.2) {
 				double alpha = .1f;
 				quickstop_accumulator = (1 - alpha) * quickstop_accumulator + alpha * Util.limit(wheel, 1.0) * 5;
 			}
 			over_power = 1;
-			angular_power = -wheel * .85;
+			angular_power = -wheel * 1;
 		} else {
 			over_power = 0;
             double sensitivity = .9;
@@ -113,6 +120,7 @@ public class Drive{
 			quickstop_accumulator = Util.wrap_accumulator(quickstop_accumulator);
 		}
 		
+		/*
 		if(shift){
 			if(!shifter.get())
 				shifter.set(true);
@@ -120,6 +128,7 @@ public class Drive{
 			if(shifter.get())
 				shifter.set(false);
 		}
+		*/
 		
 		right_pwm = left_pwm = throttle;
 
@@ -139,16 +148,24 @@ public class Drive{
 			left_pwm += over_power * (-1 - right_pwm);
 			right_pwm = -1;
 		}
+		
+		if(Math.signum(left_pwm) == -1){
+			left_pwm *= 0.91;
+		}
+		//else{
+			//right_pwm*= 0.5;
+		//}
+		
         if(isDrivetrainReversed) {
             left_pwm *= -1;
             right_pwm *= -1;
         }
-		if(shifter.get()) { // if low gear
-			leftDrive.set(left_pwm);
-			rightDrive.set(right_pwm);
-		} else {
+		//if(shifter.get()) { // if low gear
+		//	leftDrive.set(left_pwm);
+		//	rightDrive.set(right_pwm);
+		//} else {
 			moveRamped(left_pwm, right_pwm);
-		}
+		//}
 	}
 
 	public void moveRamped(double desiredLeft, double desiredRight) {
@@ -165,6 +182,9 @@ public class Drive{
 	}
 
 	public void autoMove(double left, double right) {
+		if(Math.signum(left) == -1)
+			left *= 0.91;
+		
 		leftDrive.set(Math.min(1, Math.max(-1, left)));
 		rightDrive.set(Math.min(1, Math.max(-1, right)));
 	}

@@ -4,6 +4,7 @@ public class Constants {
 	// PWM Pins
 	public static final int[] RIGHT_DRIVE_MOTOR_PINS = { 0, 1 };
 	public static final int[] LEFT_DRIVE_MOTOR_PINS = { 2, 3 };
+	public static final int[] CLIMBER_MOTOR_PINS = { 4, 5};
 
 	// DIG Pins
 	public static final int LEFT_DRIVE_ENCODER_A = 0;
