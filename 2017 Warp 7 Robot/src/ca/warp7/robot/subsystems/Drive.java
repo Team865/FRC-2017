@@ -120,7 +120,7 @@ public class Drive{
 			quickstop_accumulator = Util.wrap_accumulator(quickstop_accumulator);
 		}
 		
-		/*
+		
 		if(shift){
 			if(!shifter.get())
 				shifter.set(true);
@@ -128,7 +128,7 @@ public class Drive{
 			if(shifter.get())
 				shifter.set(false);
 		}
-		*/
+		
 		
 		right_pwm = left_pwm = throttle;
 
@@ -152,20 +152,20 @@ public class Drive{
 		if(Math.signum(left_pwm) == -1){
 			left_pwm *= 0.91;
 		}
-		//else{
-			//right_pwm*= 0.5;
-		//}
+		else{
+			right_pwm*= 0.5;
+		}
 		
         if(isDrivetrainReversed) {
             left_pwm *= -1;
             right_pwm *= -1;
         }
-		//if(shifter.get()) { // if low gear
-		//	leftDrive.set(left_pwm);
-		//	rightDrive.set(right_pwm);
-		//} else {
+		if(shifter.get()) { // if low gear
+			leftDrive.set(left_pwm);
+			rightDrive.set(right_pwm);
+		} else {
 			moveRamped(left_pwm, right_pwm);
-		//}
+		}
 	}
 
 	public void moveRamped(double desiredLeft, double desiredRight) {
