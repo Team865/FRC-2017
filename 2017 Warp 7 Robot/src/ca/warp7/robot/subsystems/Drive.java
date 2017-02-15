@@ -25,7 +25,7 @@ public class Drive{
 	private Encoder leftEncoder;
 	private Encoder rightEncoder;
 	private Solenoid shifter;
-	private ADXRS450_Gyro gyro;
+	public ADXRS450_Gyro gyro;
 	private DataPool pool;
 	private double leftRamp = 0.0;
 	private double rightRamp = 0.0;
@@ -153,7 +153,7 @@ public class Drive{
 			left_pwm *= 0.91;
 		}
 		else{
-			right_pwm*= 0.5;
+			right_pwm*= 1;
 		}
 		
         if(isDrivetrainReversed) {

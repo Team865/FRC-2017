@@ -15,13 +15,13 @@ public class GearMech {
 	}
 	
 	public void hold(){
-		if(!isHolding())
-			pistons.set(true);
+		if(isHolding())
+			pistons.set(false);
 	}
 	
 	public void release(){
-		if(isHolding())
-			pistons.set(false);
+		if(!isHolding())
+			pistons.set(true);
 	}
 	
 	public boolean isHolding(){

@@ -25,7 +25,7 @@ public class Warp7Robot extends SampleRobot{
 	private DefaultControls controls;
 	private DataPool vision;
 	public static DriverStation driverStation;
-	public static String piCommand;
+	public static String jetsonCommand;
 	public static Compressor compressor;
 	
 	
@@ -45,7 +45,7 @@ public class Warp7Robot extends SampleRobot{
         controls = new DefaultControls(driver, operator);
         vision = new DataPool("vision");
         vision.logData("command", "");
-        piCommand = "";
+        jetsonCommand = "";
 	}
 	
 	public void operatorControl(){
@@ -87,7 +87,7 @@ public class Warp7Robot extends SampleRobot{
 	public void slowPeriodic(){
 		drive.slowPeriodic();
 		//shooter.slowPeriodic();
-		vision.logData("command", piCommand);
+		vision.logData("command", jetsonCommand);
 		DataPool.collectAllData();
 	}
 }
