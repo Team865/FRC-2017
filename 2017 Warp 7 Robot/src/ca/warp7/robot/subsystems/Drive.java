@@ -1,6 +1,6 @@
 package ca.warp7.robot.subsystems;
 
-import static ca.warp7.robot.Constants.DRIVE_METERS_PER_TICK;
+import static ca.warp7.robot.Constants.DRIVE_INCHES_PER_TICK;
 import static ca.warp7.robot.Constants.DRIVE_SHIFTER_PORT;
 import static ca.warp7.robot.Constants.LEFT_DRIVE_ENCODER_A;
 import static ca.warp7.robot.Constants.LEFT_DRIVE_ENCODER_B;
@@ -22,8 +22,8 @@ public class Drive{
 	
 	private MotorGroup rightDrive;
 	private MotorGroup leftDrive;
-	private Encoder leftEncoder;
-	private Encoder rightEncoder;
+	public Encoder leftEncoder;
+	public Encoder rightEncoder;
 	private Solenoid shifter;
 	public ADXRS450_Gyro gyro;
 	private DataPool pool;
@@ -49,8 +49,10 @@ public class Drive{
 		// setup drive train encoders
 		leftEncoder =  new Encoder(LEFT_DRIVE_ENCODER_A, LEFT_DRIVE_ENCODER_B, false, EncodingType.k4X);
 		rightEncoder = new Encoder(RIGHT_DRIVE_ENCODER_A, RIGHT_DRIVE_ENCODER_B, false, EncodingType.k4X);
-		leftEncoder.setDistancePerPulse(DRIVE_METERS_PER_TICK);
-		rightEncoder.setDistancePerPulse(DRIVE_METERS_PER_TICK);
+		leftEncoder.setDistancePerPulse(DRIVE_INCHES_PER_TICK);
+		leftEncoder.setReverseDirection(true);
+		rightEncoder.setReverseDirection(false);
+		rightEncoder.setDistancePerPulse(DRIVE_INCHES_PER_TICK);
 		
 		// setup gyro
 		gyro = new ADXRS450_Gyro();
@@ -149,13 +151,6 @@ public class Drive{
 			right_pwm = -1;
 		}
 		
-		if(Math.signum(left_pwm) == -1){
-			left_pwm *= 0.91;
-		}
-		else{
-			right_pwm*= 1;
-		}
-		
         if(isDrivetrainReversed) {
             left_pwm *= -1;
             right_pwm *= -1;
@@ -182,9 +177,6 @@ public class Drive{
 	}
 
 	public void autoMove(double left, double right) {
-		if(Math.signum(left) == -1)
-			left *= 0.91;
-		
 		leftDrive.set(Math.min(1, Math.max(-1, left)));
 		rightDrive.set(Math.min(1, Math.max(-1, right)));
 	}
@@ -195,8 +187,8 @@ public class Drive{
 
 	public void slowPeriodic() {
 		pool.logDouble("gyro_angle", getRotation());
-		pool.logDouble("left_enc", leftEncoder.getDistance());
-		pool.logDouble("right_enc", rightEncoder.getDistance());
+		pool.logDouble("left_enc", rightEncoder.getDistance());
+		pool.logDouble("right_enc", leftEncoder.getDistance());
 	}
 
     public void setDrivetrainReversed(boolean reversed) {

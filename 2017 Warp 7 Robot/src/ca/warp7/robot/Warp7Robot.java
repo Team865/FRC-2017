@@ -3,12 +3,13 @@ package ca.warp7.robot;
 import static ca.warp7.robot.Constants.COMPRESSOR_PIN;
 
 import ca.warp7.robot.auto.AutonomousBase;
-import ca.warp7.robot.auto.VISION;
+import ca.warp7.robot.auto.GyroTest;
 import ca.warp7.robot.controls.DefaultControls;
 import ca.warp7.robot.networking.DataPool;
 import ca.warp7.robot.subsystems.Climber;
 import ca.warp7.robot.subsystems.Drive;
 import ca.warp7.robot.subsystems.GearMech;
+import ca.warp7.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
@@ -18,7 +19,7 @@ import edu.wpi.first.wpilibj.XboxController;
 public class Warp7Robot extends SampleRobot{
 	
 	public static Drive drive;
-	//public static Shooter shooter;
+	public static Shooter shooter;
 	public static Climber climber;
 	public static GearMech gearMech;
 	private static AutonomousBase auto;
@@ -33,7 +34,7 @@ public class Warp7Robot extends SampleRobot{
 		System.out.println("hello i am robit");
 		
 		drive = new Drive();
-		//shooter = new Shooter();
+		shooter = new Shooter();
 		climber = new Climber();
 		gearMech = new GearMech();
 		
@@ -65,11 +66,12 @@ public class Warp7Robot extends SampleRobot{
 	
 	public void autonomous(){
 		
-		auto = new VISION();
+		auto = new GyroTest();
+		//auto = new VISION();
 		//auto = new RapidFire();
 		
 		while (isAutonomous() && isEnabled()) {
-			auto.periodic(drive, gearMech, climber);
+			auto.periodic(drive, gearMech, climber, shooter);
 			
 			slowPeriodic();
 			Timer.delay(0.005);

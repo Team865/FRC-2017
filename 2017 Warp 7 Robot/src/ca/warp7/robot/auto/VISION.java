@@ -7,6 +7,8 @@ import ca.warp7.robot.networking.DataPool;
 import ca.warp7.robot.subsystems.Climber;
 import ca.warp7.robot.subsystems.Drive;
 import ca.warp7.robot.subsystems.GearMech;
+import ca.warp7.robot.subsystems.Shooter;
+import edu.wpi.first.wpilibj.Timer;
 
 public class VISION extends AutonomousBase {
 
@@ -18,7 +20,7 @@ public class VISION extends AutonomousBase {
 	}
 	
 	@Override
-	public void periodic(Drive drive, GearMech gearMech, Climber climber) {
+	public void periodic(Drive drive, GearMech gearMech, Climber climber, Shooter shooter) {
 		switch(step){
 		case 1:
 			jetsonCommand = "forward";
@@ -33,26 +35,30 @@ public class VISION extends AutonomousBase {
 			jetsonCommand = "none";
 			drive.autoMove(0, 0);
 			gearMech.release();
-			System.out.println("go go go");
-			try {Thread.sleep(3000);}catch (InterruptedException e) {}
+			Timer.delay(0.75);
 			step++;
 			break;
 		case 4:
 			drive.autoMove(0.25, 0.25);
-			try {Thread.sleep(2000);}catch (InterruptedException e) {}
+			Timer.delay(2);
 			step++;
 			break;
 		case 5:
 			drive.autoMove(0,  0);
+			gearMech.hold();
 			step++;
 			break;
 		case 6:
-			if(relativeTurn(0, drive)) step++;
+			if(absTurn(90, drive)) step++;
+			break;
+		default:
+			drive.autoMove(0, 0);
+			break;
 		}
 	}
 
 	@Override
-	public void reset(Drive drive, GearMech gearMech, Climber climber) {
+	public void reset(Drive drive, GearMech gearMech, Climber climber, Shooter shooter) {
 		drive.autoMove(0, 0);
 	}
 

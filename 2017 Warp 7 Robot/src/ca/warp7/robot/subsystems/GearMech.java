@@ -1,30 +1,41 @@
 package ca.warp7.robot.subsystems;
 
 import static ca.warp7.robot.Constants.GEAR_PISTON_PORT;
+import static ca.warp7.robot.Constants.FLIP_PORT;
 
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class GearMech {
 
-	public Solenoid pistons;
+	public Solenoid holdPiston;
+	public Solenoid flipPiston;
 	
 	
 	public GearMech(){
-		pistons = new Solenoid(GEAR_PISTON_PORT);
-		pistons.set(false);
+		holdPiston = new Solenoid(GEAR_PISTON_PORT);
+		flipPiston = new Solenoid(FLIP_PORT);
 	}
 	
 	public void hold(){
 		if(isHolding())
-			pistons.set(false);
+			holdPiston.set(false);
 	}
 	
 	public void release(){
 		if(!isHolding())
-			pistons.set(true);
+			holdPiston.set(true);
 	}
 	
 	public boolean isHolding(){
-		return pistons.get();
+		return holdPiston.get();
+	}
+	
+	public void flip(boolean b){
+		if(flipPiston.get() != b)
+			flipPiston.set(b);
+	}
+	
+	public void flippedyFlip(){
+		flipPiston.set(!flipPiston.get());
 	}
 }
