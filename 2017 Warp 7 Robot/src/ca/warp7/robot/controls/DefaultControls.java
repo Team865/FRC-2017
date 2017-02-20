@@ -67,6 +67,12 @@ public class DefaultControls extends ControlsBase{
 				back_op = false;
 			}
 			
+			if(driver.getBButton()){
+				shooter.spinUp(5750);
+			}else{
+				shooter.coast();
+			}
+			
 			if(driver.getXButton() || operator.getXButton()){
 				if(!x){
 					gearMech.flippedyFlip();
@@ -78,17 +84,21 @@ public class DefaultControls extends ControlsBase{
 			
 			if(driver.getAButton()){
 				shooter.setHopperSpin(1.0);
+				shooter.setTowerSpin(0.6);
 			}else{
 				shooter.setHopperSpin(0.0);
+				shooter.setTowerSpin(0.0);
 			}
 			
 			drive.cheesyDrive(-driver.getX(Hand.kRight), driver.getY(Hand.kLeft), driver.getBumper(Hand.kLeft), driver.getTriggerAxis(Hand.kLeft) >= 0.5, driver.getBumper(Hand.kRight));
 		}else{
-			if(DataPool.getBooleanData("vision", "found")){
-				drive.autoMove(DataPool.getDoubleData("vision", "left"), DataPool.getDoubleData("vision", "right"));
-			}else{
-				drive.cheesyDrive(-driver.getX(Hand.kRight), driver.getY(Hand.kLeft), driver.getBumper(Hand.kLeft), driver.getTriggerAxis(Hand.kLeft) >= 0.5, driver.getBumper(Hand.kRight));
-			}
+			try{
+				if(DataPool.getBooleanData("vision", "found")){
+					drive.autoMove(DataPool.getDoubleData("vision", "left"), DataPool.getDoubleData("vision", "right"));
+				}else{
+					drive.cheesyDrive(-driver.getX(Hand.kRight), driver.getY(Hand.kLeft), driver.getBumper(Hand.kLeft), driver.getTriggerAxis(Hand.kLeft) >= 0.5, driver.getBumper(Hand.kRight));
+				}
+			}catch(Exception e){}
 		}
 	}
 

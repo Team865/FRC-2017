@@ -6,6 +6,7 @@ public class Constants {
 	public static final int[] LEFT_DRIVE_MOTOR_PINS = { 2, 3 };
 	public static final int[] CLIMBER_MOTOR_PINS = { 4, 5};
 	public static final int[] HOPPER_SPIN_PINS = { 7 };
+	public static final int[] TOWER_SPIN_PINS = { 6 };
 
 	// DIG Pins
 	public static final int LEFT_DRIVE_ENCODER_A = 0;
@@ -22,7 +23,8 @@ public class Constants {
 	public static final int COMPRESSOR_PIN = 0;
 
 	// CAN ID's
-	public static final int SHOOTER_CAN_ID = 0;
+	public static final int SHOOTER_SLAVE_ID = 0;
+	public static final int SHOOTER_MASTER_ID = 1;
 	
 	// Robot dimensions and stuff
 	public static double WHEEL_DIAMETER = 4; // inches
