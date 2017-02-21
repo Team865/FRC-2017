@@ -41,9 +41,10 @@ public class Shooter {
 		masterTalon.setProfile(0);
 		masterTalon.setF(0);
 		masterTalon.setP(0.08);
-		masterTalon.setI(0.000125);
+		masterTalon.setI(0.00015);
 		masterTalon.setD(2);
 		//p = 0.08, I = 0.000125, D = 2, 12.2 v idle, 0.6 tower w/ velcrow // 50 in 4.5 in rot on the back, left motor only, no fly wheel
+		//p = 0.08, I = 0.00015, D = 2, 12.2 v idle, 0.6 tower w/ velcrow // 50 in 4.5 in rot on the back, both motors, no fly wheel
 		
 		pool = new DataPool("Shooter");
 	}

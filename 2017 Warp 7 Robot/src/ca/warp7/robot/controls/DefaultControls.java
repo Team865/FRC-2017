@@ -68,7 +68,7 @@ public class DefaultControls extends ControlsBase{
 			}
 			
 			if(driver.getBButton()){
-				shooter.spinUp(5750);
+				shooter.spinUp(5500);
 			}else{
 				shooter.coast();
 			}
