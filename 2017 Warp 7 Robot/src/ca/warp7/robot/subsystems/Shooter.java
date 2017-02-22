@@ -62,10 +62,10 @@ public class Shooter {
 		return masterTalon.getSpeed();
 	}
 	
-	public boolean atTargetRPM(){
+	public boolean withinRPM(double allowableError){
 		double speed = masterTalon.getSpeed();
 		double setpoint = masterTalon.getSetpoint();
-		return Math.abs(speed-setpoint) < 35;
+		return Math.abs(speed-setpoint) < allowableError;
 	}
 	
 	public void coast(){

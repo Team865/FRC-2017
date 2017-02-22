@@ -7,20 +7,20 @@ import static ca.warp7.robot.Warp7Robot.gearMech;
 import static ca.warp7.robot.Warp7Robot.shooter;
 
 import ca.warp7.robot.networking.DataPool;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.XboxController;
 
-public class DefaultControls extends ControlsBase{
+public class DuelRemote extends ControlsBase {
 
 	private XboxController driver;
 	private XboxController operator;
 	private boolean rightStick = false;
-	private boolean back_op = false;
+	private boolean back = false;
 	private boolean x = false;
 	
 	
-	public DefaultControls(XboxController driver, XboxController operator) {
+	public DuelRemote(XboxController driver, XboxController operator) {
 		this.driver = driver;
 		this.operator = operator;
 	}
@@ -52,22 +52,22 @@ public class DefaultControls extends ControlsBase{
 				gearMech.hold();
 			}
 			
-			if(driver.getYButton()){
+			if(operator.getBumper(Hand.kRight)){
 				climber.requestSpeed(-1.0);
 			}else{
 				climber.requestSpeed(0.0);
 			}
 			
 			if(operator.getBackButton()){
-				if(!back_op){
+				if(!back){
 					compressor.setClosedLoopControl(!compressor.getClosedLoopControl());
-					back_op = true;
+					back = true;
 				}
 			}else{
-				back_op = false;
+				back = false;
 			}
 			
-			if(driver.getBButton()){
+			if(operator.getTriggerAxis(Hand.kLeft) >= 0.5){
 				shooter.spinUp(5500);
 			}else{
 				shooter.coast();
@@ -82,7 +82,7 @@ public class DefaultControls extends ControlsBase{
 				x = false;
 			}
 			
-			if(driver.getAButton()){
+			if(operator.getTriggerAxis(Hand.kRight) >= 0.5 && shooter.withinRPM(200)){
 				shooter.setHopperSpin(1.0);
 				shooter.setTowerSpin(0.6);
 			}else{

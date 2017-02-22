@@ -151,6 +151,11 @@ public class Drive{
 			right_pwm = -1;
 		}
 		
+		if(left_pwm < 0)
+			left_pwm*= 0.89;
+		else
+			left_pwm*= 0.905;
+		
         if(isDrivetrainReversed) {
             left_pwm *= -1;
             right_pwm *= -1;

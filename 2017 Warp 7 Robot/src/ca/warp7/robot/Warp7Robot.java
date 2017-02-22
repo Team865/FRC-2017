@@ -4,7 +4,8 @@ import static ca.warp7.robot.Constants.COMPRESSOR_PIN;
 
 import ca.warp7.robot.auto.AutonomousBase;
 import ca.warp7.robot.auto.GyroTest;
-import ca.warp7.robot.controls.DefaultControls;
+import ca.warp7.robot.controls.ControlsBase;
+import ca.warp7.robot.controls.SingleRemote;
 import ca.warp7.robot.networking.DataPool;
 import ca.warp7.robot.subsystems.Climber;
 import ca.warp7.robot.subsystems.Drive;
@@ -23,7 +24,7 @@ public class Warp7Robot extends SampleRobot{
 	public static Climber climber;
 	public static GearMech gearMech;
 	private static AutonomousBase auto;
-	private DefaultControls controls;
+	private ControlsBase controls;
 	private DataPool vision;
 	public static DriverStation driverStation;
 	public static String jetsonCommand;
@@ -43,7 +44,7 @@ public class Warp7Robot extends SampleRobot{
 		
 		XboxController driver = new XboxController(0);
         XboxController operator = new XboxController(1);
-        controls = new DefaultControls(driver, operator);
+        controls = new SingleRemote(driver, operator);
         vision = new DataPool("vision");
         vision.logData("command", "");
         jetsonCommand = "";
