@@ -82,9 +82,12 @@ public class SingleRemote extends ControlsBase{
 				x = false;
 			}
 			
-			if(driver.getAButton()){
-				shooter.setHopperSpin(0.4);
-				shooter.setTowerSpin(0.5);
+			 if (driver.getPOV(0)==0){
+				shooter.setHopperSpin(-0.8);
+				shooter.setTowerSpin(0.0);
+			}else if(driver.getAButton()){
+				shooter.setHopperSpin(0.8);
+				shooter.setTowerSpin(0.6);
 			}else{
 				shooter.setHopperSpin(0.0);
 				shooter.setTowerSpin(0.0);
