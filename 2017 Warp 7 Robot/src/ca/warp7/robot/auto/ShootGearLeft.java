@@ -1,7 +1,5 @@
 package ca.warp7.robot.auto;
 
-import static ca.warp7.robot.Warp7Robot.shooter;
-
 import ca.warp7.robot.networking.DataPool;
 import ca.warp7.robot.subsystems.Climber;
 import ca.warp7.robot.subsystems.Drive;
@@ -14,6 +12,7 @@ public class ShootGearLeft extends AutonomousBase {
 	public ShootGearLeft(Drive drive, GearMech gearMech) {
 		drive.autoGear(false);
 		reset();
+		step=1;
 		gearMech.hold();
 	}
 	
