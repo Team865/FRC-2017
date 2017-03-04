@@ -10,54 +10,69 @@ public class ShootGearLeft extends AutonomousBase {
 
 	public ShootGearLeft(Drive drive) {
 		drive.autoGear(false);
+		reset();
 	}
 	
 	@Override
 	public void periodic(Drive drive, GearMech gearMech, Climber climber, Shooter shooter) {
 		switch(step){
 		case 1:
-			if(relTurn(-70, drive)){
+			if(relTurn(18, drive)){
 				Timer.delay(0.5);
 				step++;
 			}
 			break;
 		case 2:
-			if(travel(6*12, drive)){
+			if(travel(-5*12, drive)){
 				Timer.delay(0.5);
 				step++;
 			}
 			break;
 		case 3:
-			if(relTurn(30, drive)){
+			if(relTurn(-70, drive)){
 				Timer.delay(0.5);
 				step++;
 			}
 			break;
 		case 4:
+			if(travel(-6*12, drive)){
+				Timer.delay(0.5);
+				step++;
+			}
+			break;
+		case 5:
+			if(relTurn(30, drive)){
+				Timer.delay(0.5);
+				step++;
+			}
+			break;
+		case 6:	
+			try{
 				if(visionMove(drive)){
 					Timer.delay(0.5);
 					step++;
 				}
+			}catch(NullPointerException npe){step++;}
 			break;
-		case 5:
+		case 7:
 			drive.autoMove(0, 0);
 			gearMech.release();
 			Timer.delay(0.5);
 			step++;
 			break;
-		case 6:
+		case 8:
 			if(travel(3*12, drive)){
 				Timer.delay(0.5);
 				step++;
 			}
 			break;
-		case 7:
+		case 9:
 			if(relTurn(-30, drive)){
 				Timer.delay(0.5);
 				step++;
 			}
 			break;
-		case 8:
+		case 10:
 			if(travel(1*12, drive)){
 				Timer.delay(0.5);
 				step++;

@@ -46,13 +46,13 @@ public abstract class AutonomousBase {
 	 *            relative (0 is where you are)
 	 *            Positive is to the right
 	 */
-	private static boolean reset = true;
+	private static boolean resetT = true;
 	private static double offset = 0.0;
 	public static boolean relTurn(double degrees, Drive drive) {
-		if(reset)offset = drive.gyro.getAngle();
+		if(resetT)offset = drive.gyro.getAngle();
 		
 		double angle = drive.gyro.getAngle()-offset;
-		double kp = 7.0;
+		double kp = 8.0;
 		double kd = 3.0;
 		
 		double error = degrees-angle;
@@ -65,14 +65,15 @@ public abstract class AutonomousBase {
 		errorOld = error;
 		
 		if (Math.abs(error) < 3){
-			reset = true;
+			resetT = true;
 			return true;
 		}else{
-			reset = false;
+			resetT = false;
 			return false;
 		}
 	}
 	
+	private static boolean resetD = true;
 	private static double distance = 0.0;
 	private static double sumL = 0.0;
 	private static double sumR = 0.0;
@@ -82,7 +83,7 @@ public abstract class AutonomousBase {
 	private static double oldErrorL = 0.0;
 	private static double oldErrorR = 0.0;
 	public static boolean travel(double toTravel, Drive drive){
-		if(reset){
+		if(resetD){
 			lStart = drive.leftEncoder.getDistance();
 			rStart = drive.rightEncoder.getDistance();
 			distance = toTravel;
@@ -92,8 +93,8 @@ public abstract class AutonomousBase {
 		double kd = 0.1;
 		double ki = 0.0001;
 		
-		double errorL = (distance + lStart) - drive.leftEncoder.getDistance();
-		double errorR = (distance + rStart) - drive.rightEncoder.getDistance();
+		double errorL = (distance) - (drive.leftEncoder.getDistance()-lStart);
+		double errorR = (distance) - (drive.rightEncoder.getDistance()-rStart);
 		sumL += errorL;
 		sumR += errorR;
 		autoPool.logDouble("errorL", errorR);
@@ -120,16 +121,21 @@ public abstract class AutonomousBase {
 		
 		if(Math.abs(errorL) < 0.25){
 		// use this after the encoder is fixed if(Math.abs(errorL) < 1 && Math.abs(errorR) < 1){
-			reset = true;
+			resetD = true;
 			return true;
 		}else{
-			reset = false;
+			resetD = false;
 			return false;
 		}
 	}
 	
-	public static boolean visionMove(Drive drive){
+	public static boolean visionMove(Drive drive) throws NullPointerException{
 		drive.autoMove(DataPool.getDoubleData("vision", "left"), DataPool.getDoubleData("vision", "right"));
 		return !DataPool.getBooleanData("vision", "found");
+	}
+	
+	public static void reset(){
+		resetD = true;
+		resetT = true;
 	}
 }
