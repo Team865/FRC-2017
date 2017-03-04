@@ -90,7 +90,7 @@ public class Warp7Robot extends SampleRobot{
 	public void autonomous(){
 		
 		if(!s4.get())
-			auto = new ShootGearLeft(drive);
+			auto = new ShootGearLeft(drive, gearMech);
 		else if(!s5.get())
 			auto = new ShootGearRight();
 		else if(!s6.get())

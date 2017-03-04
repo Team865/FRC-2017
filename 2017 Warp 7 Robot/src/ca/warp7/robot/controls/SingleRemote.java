@@ -101,7 +101,9 @@ public class SingleRemote extends ControlsBase{
 				}else{
 					drive.cheesyDrive(-driver.getX(Hand.kRight), driver.getY(Hand.kLeft), driver.getBumper(Hand.kLeft), driver.getTriggerAxis(Hand.kLeft) >= 0.5, driver.getBumper(Hand.kRight));
 				}
-			}catch(Exception e){}
+			}catch(Exception e){
+				System.out.println("i no work no more");
+			}
 		}
 	}
 

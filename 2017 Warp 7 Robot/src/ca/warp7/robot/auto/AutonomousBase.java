@@ -93,14 +93,14 @@ public abstract class AutonomousBase {
 		double kd = 0.1;
 		double ki = 0.0001;
 		
-		double errorL = (distance) - (drive.leftEncoder.getDistance()-lStart);
-		double errorR = (distance) - (drive.rightEncoder.getDistance()-rStart);
+		double errorL = toTravel - (drive.leftEncoder.getDistance()-lStart);
+		double errorR = toTravel - (drive.rightEncoder.getDistance()-rStart);
 		sumL += errorL;
 		sumR += errorR;
 		autoPool.logDouble("errorL", errorR);
 		autoPool.logDouble("errorR", errorL);
-		double speedL = (kp*errorL)/(lStart+distance) + ((errorL-oldErrorL)*kd/(lStart+distance))+ki*sumL;
-		double speedR = (kp*errorR)/(rStart+distance) + ((errorR-oldErrorR)*kd/(rStart+distance))+ki*sumR;
+		double speedL = (kp*errorL)/Math.abs(lStart+distance) + ((errorL-oldErrorL)*kd/Math.abs(lStart+distance))+ki*sumL;
+		double speedR = (kp*errorR)/Math.abs(rStart+distance) + ((errorR-oldErrorR)*kd/Math.abs(rStart+distance))+ki*sumR;
 		//double speedL = (kp*errorL) + ((errorL-oldErrorL)*kd);
 		//double speedR = (kp*errorR)/(rStart+distance) + ((errorR-oldErrorR)*kd/(rStart+distance));
 		if(Math.abs(errorL) < 0.25)speedL = 0;
@@ -137,5 +137,12 @@ public abstract class AutonomousBase {
 	public static void reset(){
 		resetD = true;
 		resetT = true;
+		sumL = 0.0;
+		sumR = 0.0;
+		counter = 0;
+		lStart = 0.0;
+		rStart = 0.0;
+		oldErrorL = 0.0;
+		oldErrorR = 0.0;
 	}
 }
