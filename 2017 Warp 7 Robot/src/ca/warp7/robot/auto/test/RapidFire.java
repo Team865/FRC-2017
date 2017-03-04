@@ -1,5 +1,6 @@
-package ca.warp7.robot.auto;
+package ca.warp7.robot.auto.test;
 
+import ca.warp7.robot.auto.AutonomousBase;
 import ca.warp7.robot.subsystems.Climber;
 import ca.warp7.robot.subsystems.Drive;
 import ca.warp7.robot.subsystems.GearMech;

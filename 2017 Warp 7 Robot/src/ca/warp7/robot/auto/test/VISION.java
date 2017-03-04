@@ -1,8 +1,9 @@
-package ca.warp7.robot.auto;
+package ca.warp7.robot.auto.test;
 
 import static ca.warp7.robot.Warp7Robot.jetsonCommand;
 
 import ca.warp7.robot.Warp7Robot;
+import ca.warp7.robot.auto.AutonomousBase;
 import ca.warp7.robot.networking.DataPool;
 import ca.warp7.robot.subsystems.Climber;
 import ca.warp7.robot.subsystems.Drive;

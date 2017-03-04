@@ -203,4 +203,9 @@ public class Drive{
     public boolean isDrivetrainReversed() {
         return isDrivetrainReversed;
     }
+
+	public void autoGear(boolean b) {
+		if(shifter.get() != b)
+			shifter.set(b);
+	}
 }

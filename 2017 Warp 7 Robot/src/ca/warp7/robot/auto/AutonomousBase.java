@@ -83,15 +83,17 @@ public abstract class AutonomousBase {
 			distance = toTravel;
 		}
 		
-		double kp = 0.1;
+		double kp = 0.5;
 		double kd = 0.0;
 		
 		double errorL = (distance + lStart) - drive.leftEncoder.getDistance();
 		double errorR = (distance + rStart) - drive.rightEncoder.getDistance();
 		autoPool.logDouble("errorL", errorR);
 		autoPool.logDouble("errorR", errorL);
-		double speedL = (kp*errorL) + ((errorL-oldErrorL)*kd);
-		double speedR = (kp*errorR) + ((errorR-oldErrorR)*kd);
+		double speedL = (kp*errorL)/(lStart+distance) + ((errorL-oldErrorL)*kd/(lStart+distance));
+		double speedR = (kp*errorR)/(rStart+distance) + ((errorR-oldErrorR)*kd/(rStart+distance));
+		//double speedL = (kp*errorL) + ((errorL-oldErrorL)*kd);
+		//double speedR = (kp*errorR)/(rStart+distance) + ((errorR-oldErrorR)*kd/(rStart+distance));
 		if(Math.abs(errorL) < 0.25)speedL = 0;
 		if(Math.abs(errorR) < 0.25)speedR = 0;
 		
@@ -101,12 +103,17 @@ public abstract class AutonomousBase {
 		oldErrorL = errorL;
 		oldErrorR = errorR;
 		
-		if(Math.abs(errorL) < 0.25 && Math.abs(errorR) < 0.25){
+		if(Math.abs(errorL) < 1 && Math.abs(errorR) < 1){
 			reset = true;
 			return true;
 		}else{
 			reset = false;
 			return false;
 		}
+	}
+	
+	public static boolean visionMove(Drive drive){
+		drive.autoMove(DataPool.getDoubleData("vision", "left"), DataPool.getDoubleData("vision", "right"));
+		return !DataPool.getBooleanData("vision", "found");
 	}
 }
