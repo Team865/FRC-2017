@@ -40,7 +40,7 @@ public class ShootGearLeft extends AutonomousBase {
 			}
 			break;
 		case 3:
-			if(travel(-5*12, drive)){
+			if(travel(-3*12, drive)){
 				Timer.delay(0.5);
 				step++;
 			}
