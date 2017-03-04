@@ -40,6 +40,8 @@ public abstract class AutonomousBase {
 	}
 	
 	/**
+	 * negative values move to the right, positive to the left
+	 * 
 	 * @param degrees
 	 *            relative (0 is where you are)
 	 *            Positive is to the right
@@ -72,6 +74,9 @@ public abstract class AutonomousBase {
 	}
 	
 	private static double distance = 0.0;
+	private static double sumL = 0.0;
+	private static double sumR = 0.0;
+	private static int counter = 0;
 	private static double lStart = 0.0;
 	private static double rStart = 0.0;
 	private static double oldErrorL = 0.0;
@@ -83,15 +88,18 @@ public abstract class AutonomousBase {
 			distance = toTravel;
 		}
 		
-		double kp = 0.5;
-		double kd = 0.0;
+		double kp = 2;
+		double kd = 0.1;
+		double ki = 0.0001;
 		
 		double errorL = (distance + lStart) - drive.leftEncoder.getDistance();
 		double errorR = (distance + rStart) - drive.rightEncoder.getDistance();
+		sumL += errorL;
+		sumR += errorR;
 		autoPool.logDouble("errorL", errorR);
 		autoPool.logDouble("errorR", errorL);
-		double speedL = (kp*errorL)/(lStart+distance) + ((errorL-oldErrorL)*kd/(lStart+distance));
-		double speedR = (kp*errorR)/(rStart+distance) + ((errorR-oldErrorR)*kd/(rStart+distance));
+		double speedL = (kp*errorL)/(lStart+distance) + ((errorL-oldErrorL)*kd/(lStart+distance))+ki*sumL;
+		double speedR = (kp*errorR)/(rStart+distance) + ((errorR-oldErrorR)*kd/(rStart+distance))+ki*sumR;
 		//double speedL = (kp*errorL) + ((errorL-oldErrorL)*kd);
 		//double speedR = (kp*errorR)/(rStart+distance) + ((errorR-oldErrorR)*kd/(rStart+distance));
 		if(Math.abs(errorL) < 0.25)speedL = 0;
@@ -99,11 +107,19 @@ public abstract class AutonomousBase {
 		
 		speedL = Math.max(-1,  Math.min(1, speedL));
 		speedR = Math.max(-1, Math.min(1, speedR));
+		//vvvvv remove this after fixing the encoders
+		speedR = speedL;
 		drive.autoMove(-speedL, -speedR);
 		oldErrorL = errorL;
 		oldErrorR = errorR;
 		
-		if(Math.abs(errorL) < 1 && Math.abs(errorR) < 1){
+		if(counter >= 1000){
+			sumL = 0.0;
+			sumR = 0.0;
+		}
+		
+		if(Math.abs(errorL) < 0.25){
+		// use this after the encoder is fixed if(Math.abs(errorL) < 1 && Math.abs(errorR) < 1){
 			reset = true;
 			return true;
 		}else{

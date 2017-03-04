@@ -34,12 +34,10 @@ public class ShootGearLeft extends AutonomousBase {
 			}
 			break;
 		case 4:
-			try{
 				if(visionMove(drive)){
 					Timer.delay(0.5);
 					step++;
 				}
-			}catch(Exception e){step++;}
 			break;
 		case 5:
 			drive.autoMove(0, 0);

@@ -65,7 +65,7 @@ public class Drive{
 	public void tankDrive(double left, double right) {
 		pool.logDouble("desiredLeft", left);
 		pool.logDouble("desiredRight", right);
-		moveRamped(left, right);
+		autoMove(left, right);
 	}
 
 	public void cheesyDrive(double wheel, double throttle, boolean quickturn, boolean altQuickturn, boolean shift) {
@@ -151,10 +151,10 @@ public class Drive{
 			right_pwm = -1;
 		}
 		
-		if(left_pwm < 0)
-			left_pwm*= 0.89;
-		else
-			left_pwm*= 0.905;
+		//if(left_pwm < 0)
+		//	left_pwm*= 0.89;
+		//else
+		//	left_pwm*= 0.905;
 		
         if(isDrivetrainReversed) {
             left_pwm *= -1;

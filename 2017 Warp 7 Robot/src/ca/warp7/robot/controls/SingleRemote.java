@@ -92,7 +92,7 @@ public class SingleRemote extends ControlsBase{
 				shooter.setHopperSpin(0.0);
 				shooter.setTowerSpin(0.0);
 			}
-			
+			//drive.tankDrive(driver.getY(Hand.kLeft), driver.getY(Hand.kRight));
 			drive.cheesyDrive(-driver.getX(Hand.kRight), driver.getY(Hand.kLeft), driver.getBumper(Hand.kLeft), driver.getTriggerAxis(Hand.kLeft) >= 0.5, driver.getBumper(Hand.kRight));
 		}else{
 			try{
