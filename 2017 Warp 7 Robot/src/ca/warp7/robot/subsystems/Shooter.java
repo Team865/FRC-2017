@@ -8,17 +8,18 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
-import ca.warp7.robot.MotorGroup;
-import ca.warp7.robot.networking.DataPool;
+import ca.warp7.robot.misc.DataPool;
+import ca.warp7.robot.misc.MotorGroup;
 import edu.wpi.first.wpilibj.VictorSP;
 
 public class Shooter {
 
+	public static DataPool shooterPool;
+	
 	private MotorGroup hopperSpin;
 	private MotorGroup towerSpin;
 	private CANTalon masterTalon;
 	private CANTalon slaveTalon;
-	public DataPool pool;
 	
 	
 	public Shooter(){
@@ -46,43 +47,47 @@ public class Shooter {
 		//p = 0.08, I = 0.000125, D = 2, 12.2 v idle, 0.6 tower w/ velcrow // 50 in 4.5 in rot on the back, left motor only, no fly wheel
 		//p = 0.08, I = 0.00015, D = 2, 12.2 v idle, 0.6 tower w/ velcrow // 50 in 4.5 in rot on the back, both motors, no fly wheel
 		
-		pool = new DataPool("Shooter");
+		shooterPool = new DataPool("Shooter");
 	}
 	
-	public void spinUp(double targetSpeed){
-		masterTalon.enable();
-		slaveTalon.enable();
-		masterTalon.setSetpoint(targetSpeed);
-		slaveTalon.set(masterTalon.getDeviceID());
-		pool.logDouble("rpm", masterTalon.getSpeed());
-		pool.logDouble("Setpoint", masterTalon.getSetpoint());
+	public void setRPM(double targetSpeed){
+		if(targetSpeed > 0){
+			masterTalon.enable();
+			slaveTalon.enable();
+			masterTalon.setSetpoint(targetSpeed);
+			slaveTalon.set(masterTalon.getDeviceID());
+			shooterPool.logDouble("rpm", masterTalon.getSpeed());
+			shooterPool.logDouble("Setpoint", masterTalon.getSetpoint());
+		}else{
+			stop();
+		}
 	}
 	
-	public double getSpeed(){
+	public double getRPM(){
 		return masterTalon.getSpeed();
 	}
 	
-	public boolean withinRPM(double allowableError){
+	public boolean withinRange(double allowableError){
 		double speed = masterTalon.getSpeed();
 		double setpoint = masterTalon.getSetpoint();
 		return Math.abs(speed-setpoint) < allowableError;
 	}
 	
-	public void coast(){
+	private void stop(){
 		masterTalon.disable();
 		slaveTalon.disable();
 		masterTalon.set(0);
 		slaveTalon.set(masterTalon.getDeviceID());
-		pool.logDouble("rpm", masterTalon.getSpeed());
-		pool.logDouble("Setpoint", masterTalon.getSetpoint());
+		shooterPool.logDouble("rpm", masterTalon.getSpeed());
+		shooterPool.logDouble("Setpoint", masterTalon.getSetpoint());
 	}
 	
-	public void setHopperSpin(double speed){
+	public void setHopperSpeed(double speed){
 		if(hopperSpin.get() != -speed)
 			hopperSpin.set(-speed);
 	}
 	
-	public void setTowerSpin(double speed){
+	public void setTowerSpeed(double speed){
 		if(towerSpin.get() != speed)
 			towerSpin.set(speed);
 	}

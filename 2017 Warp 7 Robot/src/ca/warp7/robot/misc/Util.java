@@ -1,4 +1,4 @@
-package ca.warp7.robot;
+package ca.warp7.robot.misc;
 
 public class Util {
 	public static double limit(double val) {

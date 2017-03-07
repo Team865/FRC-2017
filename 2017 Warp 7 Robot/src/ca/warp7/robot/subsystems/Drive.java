@@ -8,10 +8,11 @@ import static ca.warp7.robot.Constants.LEFT_DRIVE_MOTOR_PINS;
 import static ca.warp7.robot.Constants.RIGHT_DRIVE_ENCODER_A;
 import static ca.warp7.robot.Constants.RIGHT_DRIVE_ENCODER_B;
 import static ca.warp7.robot.Constants.RIGHT_DRIVE_MOTOR_PINS;
+import static ca.warp7.robot.misc.Util.limit;
 
-import ca.warp7.robot.MotorGroup;
-import ca.warp7.robot.Util;
-import ca.warp7.robot.networking.DataPool;
+import ca.warp7.robot.misc.DataPool;
+import ca.warp7.robot.misc.MotorGroup;
+import ca.warp7.robot.misc.Util;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.Encoder;
@@ -20,22 +21,21 @@ import edu.wpi.first.wpilibj.VictorSP;
 
 public class Drive{
 	
+	public static DataPool drivePool;
+	
 	private MotorGroup rightDrive;
 	private MotorGroup leftDrive;
-	public Encoder leftEncoder;
-	public Encoder rightEncoder;
 	private Solenoid shifter;
-	public ADXRS450_Gyro gyro;
-	private DataPool pool;
-	private double leftRamp = 0.0;
-	private double rightRamp = 0.0;
+	private ADXRS450_Gyro gyro;
+	private Encoder leftEncoder;
+	private Encoder rightEncoder;
+	
+	
 	private double quickstop_accumulator = 0;
 	private double old_wheel = 0;
-    private boolean isDrivetrainReversed = false;
-    
-    
+    private boolean driveReversed = false;
     public Drive() {
-		pool = new DataPool("Drive");
+		drivePool = new DataPool("Drive");
 
 		// setup drive train motors
 		rightDrive = new MotorGroup(RIGHT_DRIVE_MOTOR_PINS, VictorSP.class);
@@ -59,12 +59,11 @@ public class Drive{
 	}
 
 	public void setGear(boolean gear) {
-		shifter.set(gear);
+		if(shifter.get() != gear)
+			shifter.set(gear);
 	}
 
 	public void tankDrive(double left, double right) {
-		pool.logDouble("desiredLeft", left);
-		pool.logDouble("desiredRight", right);
 		autoMove(left, right);
 	}
 
@@ -77,7 +76,7 @@ public class Drive{
 		 */
 		throttle = Util.deadband(throttle);
 		wheel = Util.deadband(wheel);
-		if(isDrivetrainReversed)
+		if(driveReversed)
 			wheel*=-1;
 		double right_pwm;
 		double left_pwm;
@@ -151,15 +150,11 @@ public class Drive{
 			right_pwm = -1;
 		}
 		
-		//if(left_pwm < 0)
-		//	left_pwm*= 0.89;
-		//else
-		//	left_pwm*= 0.905;
-		
-        if(isDrivetrainReversed) {
+        if(driveReversed) {
             left_pwm *= -1;
             right_pwm *= -1;
         }
+        
 		if(shifter.get()) { // if low gear
 			leftDrive.set(left_pwm);
 			rightDrive.set(right_pwm);
@@ -168,6 +163,8 @@ public class Drive{
 		}
 	}
 
+	private double leftRamp = 0.0;
+	private double rightRamp = 0.0;
 	public void moveRamped(double desiredLeft, double desiredRight) {
 		double ramp_speed = 6;
 		leftRamp += (desiredLeft - leftRamp) / ramp_speed;
@@ -176,36 +173,39 @@ public class Drive{
 		rightDrive.set(rightRamp);
 	}
 
-	public void stop() {
-		rightDrive.set(0);
-		leftDrive.set(0);
-	}
-
 	public void autoMove(double left, double right) {
-		leftDrive.set(Math.min(1, Math.max(-1, left)));
-		rightDrive.set(Math.min(1, Math.max(-1, right)));
+		leftDrive.set(limit(left, 1));
+		rightDrive.set(limit(right, 1));
 	}
 
+	public void autoShift(boolean b) {
+		if(shifter.get() != b)
+			shifter.set(b);
+	}
+	
+	public void slowPeriodic() {
+		drivePool.logDouble("gyro_angle", getRotation());
+		drivePool.logDouble("left_enc", rightEncoder.getDistance());
+		drivePool.logDouble("right_enc", leftEncoder.getDistance());
+	}
+
+	public void setDrivetrainReversed(boolean reversed) {
+        driveReversed = reversed;
+    }
+	
+	public boolean driveReversed() {
+        return driveReversed;
+    }
+	
 	public double getRotation() {
 		return gyro.getAngle();
 	}
-
-	public void slowPeriodic() {
-		pool.logDouble("gyro_angle", getRotation());
-		pool.logDouble("left_enc", rightEncoder.getDistance());
-		pool.logDouble("right_enc", leftEncoder.getDistance());
+	
+	public double getLeftDistance(){
+		return leftEncoder.getDistance();
 	}
-
-    public void setDrivetrainReversed(boolean reversed) {
-        isDrivetrainReversed = reversed;
-    }
-
-    public boolean isDrivetrainReversed() {
-        return isDrivetrainReversed;
-    }
-
-	public void autoGear(boolean b) {
-		if(shifter.get() != b)
-			shifter.set(b);
+	
+	public double getRightDistance(){
+		return rightEncoder.getDistance();
 	}
 }

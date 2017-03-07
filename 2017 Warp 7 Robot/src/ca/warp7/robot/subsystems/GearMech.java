@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj.Solenoid;
 
 public class GearMech {
 
-	public Solenoid holdPiston;
-	public Solenoid flipPiston;
+	private Solenoid holdPiston;
+	private Solenoid flipPiston;
 	
 	
 	public GearMech(){

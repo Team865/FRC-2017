@@ -6,7 +6,7 @@ import static ca.warp7.robot.Warp7Robot.drive;
 import static ca.warp7.robot.Warp7Robot.gearMech;
 import static ca.warp7.robot.Warp7Robot.shooter;
 
-import ca.warp7.robot.networking.DataPool;
+import ca.warp7.robot.misc.DataPool;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -39,7 +39,7 @@ public class DuelRemote extends ControlsBase {
 		if(driver.getTriggerAxis(Hand.kLeft) < 0.5){
 			if(driver.getStickButton(Hand.kRight)){
 				if(!rightStick){
-					drive.setDrivetrainReversed(!drive.isDrivetrainReversed());
+					drive.setDrivetrainReversed(!drive.driveReversed());
 					rightStick = true;
 				}
 			}else
@@ -53,9 +53,9 @@ public class DuelRemote extends ControlsBase {
 			}
 			
 			if(operator.getBumper(Hand.kRight)){
-				climber.requestSpeed(-1.0);
+				climber.setSpeed(-1.0);
 			}else{
-				climber.requestSpeed(0.0);
+				climber.setSpeed(0.0);
 			}
 			
 			if(operator.getBackButton()){
@@ -68,9 +68,9 @@ public class DuelRemote extends ControlsBase {
 			}
 			
 			if(operator.getTriggerAxis(Hand.kLeft) >= 0.5){
-				shooter.spinUp(5500);
+				shooter.setRPM(5500);
 			}else{
-				shooter.coast();
+				shooter.setRPM(0);
 			}
 			
 			if(driver.getXButton() || operator.getXButton()){
@@ -82,12 +82,12 @@ public class DuelRemote extends ControlsBase {
 				x = false;
 			}
 			
-			if(operator.getTriggerAxis(Hand.kRight) >= 0.5 && shooter.withinRPM(200)){
-				shooter.setHopperSpin(1.0);
-				shooter.setTowerSpin(0.6);
+			if(operator.getTriggerAxis(Hand.kRight) >= 0.5 && shooter.withinRange(200)){
+				shooter.setHopperSpeed(1.0);
+				shooter.setTowerSpeed(0.6);
 			}else{
-				shooter.setHopperSpin(0.0);
-				shooter.setTowerSpin(0.0);
+				shooter.setHopperSpeed(0.0);
+				shooter.setTowerSpeed(0.0);
 			}
 			
 			drive.cheesyDrive(-driver.getX(Hand.kRight), driver.getY(Hand.kLeft), driver.getBumper(Hand.kLeft), driver.getTriggerAxis(Hand.kLeft) >= 0.5, driver.getBumper(Hand.kRight));

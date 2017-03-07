@@ -26,15 +26,15 @@ public class Constants {
 	public static final int SHOOTER_SLAVE_ID = 0;
 	public static final int SHOOTER_MASTER_ID = 1;
 	
+	// Remote ID's
+	public static final int DRIVER_ID = 0;
+	public static final int OPERATOR_ID = 1;
+	
 	// Robot dimensions and stuff
 	public static double WHEEL_DIAMETER = 4; // inches
 	public static double WHEEL_CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
 	public static int DRIVE_TICKS_PER_REV = 256;
 	public static double DRIVE_INCHES_PER_TICK = WHEEL_CIRCUMFERENCE / DRIVE_TICKS_PER_REV;
-	
-    // reversed?
-    public static boolean BATTERY = false;
-    public static boolean INTAKE = true;
 
     public static String ATTR_EX_MODE = "CameraAttributes::Exposure::Mode";
     public static String ATTR_EX_VALUE = "CameraAttributes::Exposure::Value";

@@ -1,4 +1,4 @@
-package ca.warp7.robot;
+package ca.warp7.robot.misc;
 
 import java.lang.reflect.InvocationTargetException;
 

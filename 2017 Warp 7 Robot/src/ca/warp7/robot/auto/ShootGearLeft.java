@@ -1,6 +1,6 @@
 package ca.warp7.robot.auto;
 
-import ca.warp7.robot.networking.DataPool;
+import ca.warp7.robot.misc.DataPool;
 import edu.wpi.first.wpilibj.Timer;
 
 public class ShootGearLeft extends AutonomousBase {
@@ -9,30 +9,30 @@ public class ShootGearLeft extends AutonomousBase {
 	public void periodic() {
 		switch(step){
 		case 1:
-			shooter.spinUp(5500);
+			shooter.setRPM(5500);
 			Timer.delay(1.5);
-			shooter.setHopperSpin(0.8);
-			shooter.setTowerSpin(0.6);
+			shooter.setHopperSpeed(0.8);
+			shooter.setTowerSpeed(0.6);
 			Timer.delay(5);
-			shooter.spinUp(0);
-			shooter.setHopperSpin(0.0);
-			shooter.setTowerSpin(0.0);
+			shooter.setRPM(0);
+			shooter.setHopperSpeed(0.0);
+			shooter.setTowerSpeed(0.0);
 			nextStep(0.5);
 			break;
 		case 2:
-			if(relTurn(18))
+			if(relTurn(18)) // 14
 				nextStep(0.5);
 			break;
 		case 3:
-			if(travel(-3*12))
+			if(travel(-3*12))  // -61.5
 				nextStep(0.5);
 			break;
 		case 4:
-			if(relTurn(-81))
+			if(relTurn(-81)) //~-83
 				nextStep(0.5);
 			break;
 		case 5:
-			if(travel(4.25*12))
+			if(travel(4.25*12)) // arbitrary -> vision
 				nextStep(0.5);
 			break;
 		case 6:

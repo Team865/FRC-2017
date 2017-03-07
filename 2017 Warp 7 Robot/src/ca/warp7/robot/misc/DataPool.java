@@ -1,4 +1,4 @@
-package ca.warp7.robot.networking;
+package ca.warp7.robot.misc;
 
 import java.util.ArrayList;
 

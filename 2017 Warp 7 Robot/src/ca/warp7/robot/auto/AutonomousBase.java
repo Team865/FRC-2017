@@ -1,7 +1,7 @@
 package ca.warp7.robot.auto;
 
 import ca.warp7.robot.Warp7Robot;
-import ca.warp7.robot.networking.DataPool;
+import ca.warp7.robot.misc.DataPool;
 import ca.warp7.robot.subsystems.Climber;
 import ca.warp7.robot.subsystems.Drive;
 import ca.warp7.robot.subsystems.GearMech;
@@ -33,7 +33,7 @@ public abstract class AutonomousBase {
 	public void reset(){
 		drive.autoMove(0, 0);
 		gearMech.hold();
-		drive.autoGear(false);
+		drive.autoShift(false);
 		resetValues();
 	}
 	
@@ -46,7 +46,7 @@ public abstract class AutonomousBase {
 	protected boolean absTurn(double degrees) {
 		degrees %= 360;
 		if(degrees < 0) degrees += 360;
-		double angle = drive.gyro.getAngle()%360;
+		double angle = drive.getRotation()%360;
 		double kp = 7.0;
 		double kd = 3;
 		
@@ -71,9 +71,9 @@ public abstract class AutonomousBase {
 	private boolean resetT = true;
 	private double offset = 0.0;
 	protected boolean relTurn(double degrees) {
-		if(resetT)offset = drive.gyro.getAngle();
+		if(resetT)offset = drive.getRotation();
 		
-		double angle = drive.gyro.getAngle()-offset;
+		double angle = drive.getRotation()-offset;
 		double kp = 8.0;
 		double kd = 3.0;
 		
@@ -106,8 +106,8 @@ public abstract class AutonomousBase {
 	private double oldErrorR = 0.0;
 	protected boolean travel(double toTravel){
 		if(resetD){
-			lStart = drive.leftEncoder.getDistance();
-			rStart = drive.rightEncoder.getDistance();
+			lStart = drive.getLeftDistance();
+			rStart = drive.getRightDistance();
 			distance = toTravel;
 		}
 		
@@ -115,8 +115,8 @@ public abstract class AutonomousBase {
 		double kd = 0.1;
 		double ki = 0.0001;
 		
-		double errorL = toTravel - (drive.leftEncoder.getDistance()-lStart);
-		double errorR = toTravel - (drive.rightEncoder.getDistance()-rStart);
+		double errorL = toTravel - (drive.getLeftDistance()-lStart);
+		double errorR = toTravel - (drive.getRightDistance()-rStart);
 		sumL += errorL;
 		sumR += errorR;
 		autoPool.logDouble("errorL", errorR);

@@ -1,6 +1,9 @@
 package ca.warp7.robot;
 
 import static ca.warp7.robot.Constants.COMPRESSOR_PIN;
+import static ca.warp7.robot.Constants.DRIVER_ID;
+import static ca.warp7.robot.Constants.OPERATOR_ID;
+import static ca.warp7.robot.auto.AutonomousBase.autoPool;
 
 import ca.warp7.robot.auto.AutonomousBase;
 import ca.warp7.robot.auto.GearCentre;
@@ -11,7 +14,7 @@ import ca.warp7.robot.auto.ShootGearLeft;
 import ca.warp7.robot.auto.ShootGearRight;
 import ca.warp7.robot.controls.ControlsBase;
 import ca.warp7.robot.controls.SingleRemote;
-import ca.warp7.robot.networking.DataPool;
+import ca.warp7.robot.misc.DataPool;
 import ca.warp7.robot.subsystems.Climber;
 import ca.warp7.robot.subsystems.Drive;
 import ca.warp7.robot.subsystems.GearMech;
@@ -29,12 +32,12 @@ public class Warp7Robot extends SampleRobot{
 	public static Shooter shooter;
 	public static Climber climber;
 	public static GearMech gearMech;
-	private static AutonomousBase auto;
-	private ControlsBase controls;
-	private DataPool vision;
-	private DataPool generalPool;
-	public static DriverStation driverStation;
 	public static Compressor compressor;
+	
+	private static AutonomousBase auto;
+	private static ControlsBase controls;
+	
+	private DriverStation driverStation;
 	private DigitalInput s4;
 	private DigitalInput s5;
 	private DigitalInput s6;
@@ -43,41 +46,38 @@ public class Warp7Robot extends SampleRobot{
 	
 	
 	public void robotInit(){
-		System.out.println("hello i am robit");
+		System.out.println("Hello me is robit");
 		
 		drive = new Drive();
 		shooter = new Shooter();
 		climber = new Climber();
 		gearMech = new GearMech();
-		
-		driverStation = DriverStation.getInstance();
 		compressor = new Compressor(COMPRESSOR_PIN);
 		
+		XboxController driver = new XboxController(DRIVER_ID);
+        XboxController operator = new XboxController(OPERATOR_ID);
+        controls = new SingleRemote(driver, operator);
+		
+		driverStation = DriverStation.getInstance();
 		s4 = new DigitalInput(4);
 		s5 = new DigitalInput(5);
 		s6 = new DigitalInput(6);
 		s7 = new DigitalInput(7);
 		s8 = new DigitalInput(8);
-		
-		XboxController driver = new XboxController(0);
-        XboxController operator = new XboxController(1);
-        controls = new SingleRemote(driver, operator);
-        vision = new DataPool("vision");
-        vision.logData("command", "");
-        generalPool = new DataPool("General");
 	}
 	
 	public void operatorControl(){
 		controls.reset();
-		if(driverStation.isFMSAttached()) {
-            compressor.setClosedLoopControl(false);
-        } else {
-            compressor.setClosedLoopControl(true);
-        }
+		
+		if(driverStation.isFMSAttached()) 
+			compressor.setClosedLoopControl(false);
+        else 
+        	compressor.setClosedLoopControl(true);
+        
 		 while (isOperatorControl() && isEnabled()) {
 			 controls.periodic();
-			 
 			 periodic();
+			 
 	         Timer.delay(0.005);
 		 }
 	}
@@ -116,17 +116,17 @@ public class Warp7Robot extends SampleRobot{
 		drive.slowPeriodic();
 		
 		if(!s4.get())
-			generalPool.logInt("Switch Key", 4);
+			autoPool.logInt("Switch Key", 4);
 		else if(!s5.get())
-			generalPool.logInt("Switch Key", 5);			
+			autoPool.logInt("Switch Key", 5);			
 		else if(!s6.get())
-			generalPool.logInt("Switch Key", 6);
+			autoPool.logInt("Switch Key", 6);
 		else if(!s7.get())
-			generalPool.logInt("Switch Key", 7);
+			autoPool.logInt("Switch Key", 7);
 		else if(!s8.get())
-			generalPool.logInt("Switch Key", 8);
+			autoPool.logInt("Switch Key", 8);
 		else
-			generalPool.logInt("Switch Key", -1);
+			autoPool.logInt("Switch Key", -1);
 		
 		DataPool.collectAllData();
 	}
