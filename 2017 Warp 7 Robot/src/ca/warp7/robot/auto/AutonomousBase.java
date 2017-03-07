@@ -1,27 +1,49 @@
 package ca.warp7.robot.auto;
 
+import ca.warp7.robot.Warp7Robot;
 import ca.warp7.robot.networking.DataPool;
 import ca.warp7.robot.subsystems.Climber;
 import ca.warp7.robot.subsystems.Drive;
 import ca.warp7.robot.subsystems.GearMech;
 import ca.warp7.robot.subsystems.Shooter;
+import edu.wpi.first.wpilibj.Timer;
 
 public abstract class AutonomousBase {
 
-	public int step = 1;
+	public int step;
 	public static DataPool autoPool = new DataPool("auto");
+	protected Climber climber;
+	protected Drive drive;
+	protected GearMech gearMech;
+	protected Shooter shooter;
 	
-	public abstract void periodic(Drive drive, GearMech gearMech, Climber climber, Shooter shooter);
+	
+	public AutonomousBase(){
+		climber = Warp7Robot.climber;
+		drive = Warp7Robot.drive;
+		gearMech = Warp7Robot.gearMech;
+		shooter = Warp7Robot.shooter;
+		step = 1;
+		reset();
+		resetValues();
+	}
+	
+	public abstract void periodic();
 
-	public abstract void reset(Drive drive, GearMech gearMech, Climber climber, Shooter shooter);
+	public void reset(){
+		drive.autoMove(0, 0);
+		gearMech.hold();
+		drive.autoGear(false);
+		resetValues();
+	}
 	
 	/**
 	 * @param degrees
 	 *            relative (0 is where you are)
 	 *            Positive is to the right
 	 */
-	private static double errorOld = 0.0;
-	public static boolean absTurn(double degrees, Drive drive) {
+	private double errorOld = 0.0;
+	protected boolean absTurn(double degrees) {
 		degrees %= 360;
 		if(degrees < 0) degrees += 360;
 		double angle = drive.gyro.getAngle()%360;
@@ -46,9 +68,9 @@ public abstract class AutonomousBase {
 	 *            relative (0 is where you are)
 	 *            Positive is to the right
 	 */
-	private static boolean resetT = true;
-	private static double offset = 0.0;
-	public static boolean relTurn(double degrees, Drive drive) {
+	private boolean resetT = true;
+	private double offset = 0.0;
+	protected boolean relTurn(double degrees) {
 		if(resetT)offset = drive.gyro.getAngle();
 		
 		double angle = drive.gyro.getAngle()-offset;
@@ -73,16 +95,16 @@ public abstract class AutonomousBase {
 		}
 	}
 	
-	private static boolean resetD = true;
-	private static double distance = 0.0;
-	private static double sumL = 0.0;
-	private static double sumR = 0.0;
-	private static int counter = 0;
-	private static double lStart = 0.0;
-	private static double rStart = 0.0;
-	private static double oldErrorL = 0.0;
-	private static double oldErrorR = 0.0;
-	public static boolean travel(double toTravel, Drive drive){
+	private boolean resetD = true;
+	private double distance = 0.0;
+	private double sumL = 0.0;
+	private double sumR = 0.0;
+	private int counter = 0;
+	private double lStart = 0.0;
+	private double rStart = 0.0;
+	private double oldErrorL = 0.0;
+	private double oldErrorR = 0.0;
+	protected boolean travel(double toTravel){
 		if(resetD){
 			lStart = drive.leftEncoder.getDistance();
 			rStart = drive.rightEncoder.getDistance();
@@ -101,8 +123,6 @@ public abstract class AutonomousBase {
 		autoPool.logDouble("errorR", errorL);
 		double speedL = (kp*errorL)/Math.abs(lStart+distance) + ((errorL-oldErrorL)*kd/Math.abs(lStart+distance))+ki*sumL;
 		double speedR = (kp*errorR)/Math.abs(rStart+distance) + ((errorR-oldErrorR)*kd/Math.abs(rStart+distance))+ki*sumR;
-		//double speedL = (kp*errorL) + ((errorL-oldErrorL)*kd);
-		//double speedR = (kp*errorR)/(rStart+distance) + ((errorR-oldErrorR)*kd/(rStart+distance));
 		if(Math.abs(errorL) < 0.25)speedL = 0;
 		if(Math.abs(errorR) < 0.25)speedR = 0;
 		
@@ -129,12 +149,18 @@ public abstract class AutonomousBase {
 		}
 	}
 	
-	public static boolean visionMove(Drive drive) throws NullPointerException{
+	protected boolean visionMove() throws NullPointerException{
 		drive.autoMove(DataPool.getDoubleData("vision", "left"), DataPool.getDoubleData("vision", "right"));
 		return !DataPool.getBooleanData("vision", "found");
 	}
 	
-	public static void reset(){
+	protected void nextStep(double delaySeconds){
+		step++;
+		resetValues();
+		Timer.delay(delaySeconds);
+	}
+	
+	private void resetValues(){
 		resetD = true;
 		resetT = true;
 		sumL = 0.0;
@@ -144,5 +170,7 @@ public abstract class AutonomousBase {
 		rStart = 0.0;
 		oldErrorL = 0.0;
 		oldErrorR = 0.0;
+		offset = 0.0;
+		errorOld = 0.0;
 	}
 }

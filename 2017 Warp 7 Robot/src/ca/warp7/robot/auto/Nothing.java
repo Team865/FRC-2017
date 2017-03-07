@@ -1,22 +1,15 @@
 package ca.warp7.robot.auto;
 
-import ca.warp7.robot.subsystems.Climber;
-import ca.warp7.robot.subsystems.Drive;
-import ca.warp7.robot.subsystems.GearMech;
-import ca.warp7.robot.subsystems.Shooter;
-
 public class Nothing extends AutonomousBase {
 
 	@Override
-	public void periodic(Drive drive, GearMech gearMech, Climber climber, Shooter shooter) {
-		// TODO Auto-generated method stub
-		
+	public void periodic() {
+		/* 
+		   If a tree falls in a forest and no one is there to hear it... did it make a sound?
+		  
+		   ...
+		   
+		   I guess not?
+		*/
 	}
-
-	@Override
-	public void reset(Drive drive, GearMech gearMech, Climber climber, Shooter shooter) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

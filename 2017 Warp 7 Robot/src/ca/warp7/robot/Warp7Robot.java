@@ -34,16 +34,12 @@ public class Warp7Robot extends SampleRobot{
 	private DataPool vision;
 	private DataPool generalPool;
 	public static DriverStation driverStation;
-	public static String jetsonCommand;
 	public static Compressor compressor;
-	public static DigitalInput s4;
-	public static DigitalInput s5;
-	public static DigitalInput s6;
-	public static DigitalInput s7;
-	public static DigitalInput s8;
-	
-	
-	// 45678
+	private DigitalInput s4;
+	private DigitalInput s5;
+	private DigitalInput s6;
+	private DigitalInput s7;
+	private DigitalInput s8;
 	
 	
 	public void robotInit(){
@@ -69,7 +65,6 @@ public class Warp7Robot extends SampleRobot{
         vision = new DataPool("vision");
         vision.logData("command", "");
         generalPool = new DataPool("General");
-        jetsonCommand = "";
 	}
 	
 	public void operatorControl(){
@@ -82,7 +77,7 @@ public class Warp7Robot extends SampleRobot{
 		 while (isOperatorControl() && isEnabled()) {
 			 controls.periodic();
 			 
-			 slowPeriodic();
+			 periodic();
 	         Timer.delay(0.005);
 		 }
 	}
@@ -90,7 +85,7 @@ public class Warp7Robot extends SampleRobot{
 	public void autonomous(){
 		
 		if(!s4.get())
-			auto = new ShootGearLeft(drive, gearMech);
+			auto = new ShootGearLeft();
 		else if(!s5.get())
 			auto = new ShootGearRight();
 		else if(!s6.get())
@@ -101,30 +96,24 @@ public class Warp7Robot extends SampleRobot{
 			auto = new GearCentre();
 		else
 			auto = new Nothing();
-		//auto = new GyroTest();
-		//auto = new VISION();
-		//auto = new RapidFire();
 		
 		while (isAutonomous() && isEnabled()) {
-			auto.periodic(drive, gearMech, climber, shooter);
-			
-			slowPeriodic();
+			auto.periodic();
+			periodic();
 			Timer.delay(0.005);
 		}
 	}
 	
 	public void disabled(){
-		//auto.reset(drive, shooter);
+		auto.reset();
 		while (!isEnabled()) {
-			slowPeriodic();
+			periodic();
 			Timer.delay(0.005);
 		}
 	}
 	
-	public void slowPeriodic(){
+	public void periodic(){
 		drive.slowPeriodic();
-		//shooter.slowPeriodic();
-		vision.logData("command", jetsonCommand);
 		
 		if(!s4.get())
 			generalPool.logInt("Switch Key", 4);

@@ -1,23 +1,12 @@
 package ca.warp7.robot.auto;
 
 import ca.warp7.robot.networking.DataPool;
-import ca.warp7.robot.subsystems.Climber;
-import ca.warp7.robot.subsystems.Drive;
-import ca.warp7.robot.subsystems.GearMech;
-import ca.warp7.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj.Timer;
 
 public class ShootGearLeft extends AutonomousBase {
-
-	public ShootGearLeft(Drive drive, GearMech gearMech) {
-		drive.autoGear(false);
-		reset();
-		step=1;
-		gearMech.hold();
-	}
 	
 	@Override
-	public void periodic(Drive drive, GearMech gearMech, Climber climber, Shooter shooter) {
+	public void periodic() {
 		switch(step){
 		case 1:
 			shooter.spinUp(5500);
@@ -28,93 +17,71 @@ public class ShootGearLeft extends AutonomousBase {
 			shooter.spinUp(0);
 			shooter.setHopperSpin(0.0);
 			shooter.setTowerSpin(0.0);
-			Timer.delay(0.5);
-			step++;
+			nextStep(0.5);
 			break;
 		case 2:
-			if(relTurn(18, drive)){
-				Timer.delay(0.5);
-				step++;
-				reset();
-			}
+			if(relTurn(18))
+				nextStep(0.5);
 			break;
 		case 3:
-			if(travel(-3*12, drive)){
-				Timer.delay(0.5);
-				step++;
-			}
+			if(travel(-3*12))
+				nextStep(0.5);
 			break;
 		case 4:
-			if(relTurn(-81, drive)){
-				Timer.delay(0.5);
-				step++;
-			}
+			if(relTurn(-81))
+				nextStep(0.5);
 			break;
 		case 5:
-			if(travel(4.25*12, drive)){
-				Timer.delay(0.5);
-				step++;
-			}
+			if(travel(4.25*12))
+				nextStep(0.5);
 			break;
 		case 6:
-			if(relTurn(35, drive)){
-				Timer.delay(0.5);
-				step++;
-			}
+			if(relTurn(35))
+				nextStep(0.5);
 			break;
 		case 7:
-			if(travel(3*12, drive)){
-				Timer.delay(0.5);
-				step++;
-			}
+			if(travel(3*12))
+				nextStep(0.5);
 			break;
 		case 8:	
 			try{
-				if(visionMove(drive)){
+				if(visionMove()){
 					Timer.delay(2);
-					step++;
+					nextStep(0.0);
 				}
-			}catch(NullPointerException npe){System.out.println("why");step++;}
-			break;
-		case 9:
-			if(DataPool.getBooleanData("vision", "found")){
-				step--;
-				return;
-			}
-			drive.autoMove(0, 0);
-			gearMech.release();
-			Timer.delay(0.5);
-			step++;
-			break;
-		case 10:
-			if(travel(-3.75*12, drive)){
-				Timer.delay(0.5);
+			}catch(NullPointerException npe){
+				System.err.println("RIP no jetson");
 				step++;
 			}
+			break;
+		case 9:
+			try{
+				if(DataPool.getBooleanData("vision", "found")){
+					step--;
+					return;
+				}
+			}catch(NullPointerException npe){}
+			drive.autoMove(0, 0);
+			gearMech.release();
+			nextStep(0.5);
+			break;
+		case 10:
+			if(travel(-3.75*12))
+				nextStep(0.5);
 			break;
 		case 11:
 			//-60 would be square with driver stations
-			if(relTurn(30, drive)){
-				Timer.delay(0.5);
-				step++;
-			}
+			if(relTurn(30))
+				nextStep(0.5);
 			break;
 		case 12:
-			if(travel(-2*12, drive)){
-				Timer.delay(0.5);
-				step++;
-			}
+			if(travel(-2*12))
+				nextStep(0.5);
 			break;
 		default:
-			reset(drive, gearMech, climber, shooter);
+			reset();
 			break;
 		}
-	}
-
-	@Override
-	public void reset(Drive drive, GearMech gearMech, Climber climber, Shooter shooter) {
-		drive.autoMove(0, 0);
-		gearMech.hold();
 	}
 
 }
