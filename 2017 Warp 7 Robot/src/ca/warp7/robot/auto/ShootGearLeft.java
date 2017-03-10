@@ -9,15 +9,11 @@ public class ShootGearLeft extends AutonomousBase {
 	public void periodic() {
 		switch(step){
 		case 1:
-			shooter.setRPM(5500);
-			Timer.delay(1.5);
-			shooter.setHopperSpeed(0.8);
-			shooter.setTowerSpeed(0.6);
-			Timer.delay(5);
-			shooter.setRPM(0);
-			shooter.setHopperSpeed(0.0);
-			shooter.setTowerSpeed(0.0);
-			nextStep(0.5);
+			shoot(4450);
+			if(timePassed(6)){
+				stopShooter();
+				nextStep(0.5);
+			}
 			break;
 		case 2:
 			if(relTurn(18)) // 14
@@ -83,5 +79,4 @@ public class ShootGearLeft extends AutonomousBase {
 			break;
 		}
 	}
-
 }

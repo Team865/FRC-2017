@@ -30,10 +30,11 @@ public class Drive{
 	private Encoder leftEncoder;
 	private Encoder rightEncoder;
 	
-	
 	private double quickstop_accumulator = 0;
 	private double old_wheel = 0;
     private boolean driveReversed = false;
+    
+    
     public Drive() {
 		drivePool = new DataPool("Drive");
 
@@ -103,14 +104,14 @@ public class Drive{
 		if(altQuickturn){
 			if(Math.abs(throttle) < 0.2){
 				double alpha = .1f;
-				quickstop_accumulator = (1-alpha)*quickstop_accumulator+alpha*Util.limit(wheel, 1.0)*5;
+				quickstop_accumulator = (1-alpha)*quickstop_accumulator+alpha*limit(wheel, 1.0)*5;
 			}
 			over_power = - wheel * .75;
 			angular_power = -wheel * 1;
 		}else if (quickturn) {
 			if (Math.abs(throttle) < 0.2) {
 				double alpha = .1f;
-				quickstop_accumulator = (1 - alpha) * quickstop_accumulator + alpha * Util.limit(wheel, 1.0) * 5;
+				quickstop_accumulator = (1 - alpha) * quickstop_accumulator + alpha * limit(wheel, 1.0) * 5;
 			}
 			over_power = 1;
 			angular_power = -wheel * 1;

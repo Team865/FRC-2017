@@ -32,6 +32,7 @@ public abstract class AutonomousBase {
 
 	public void reset(){
 		drive.autoMove(0, 0);
+		stopShooter();
 		gearMech.hold();
 		drive.autoShift(false);
 		resetValues();
@@ -61,15 +62,15 @@ public abstract class AutonomousBase {
 		return Math.abs(error) < 3;
 	}
 	
+	private boolean resetT = true;
+	private double offset = 0.0;
 	/**
-	 * negative values move to the right, positive to the left
+	 * negative values turn clockwise, positive counter clockwise
 	 * 
 	 * @param degrees
 	 *            relative (0 is where you are)
 	 *            Positive is to the right
 	 */
-	private boolean resetT = true;
-	private double offset = 0.0;
 	protected boolean relTurn(double degrees) {
 		if(resetT)offset = drive.getRotation();
 		
@@ -104,6 +105,12 @@ public abstract class AutonomousBase {
 	private double rStart = 0.0;
 	private double oldErrorL = 0.0;
 	private double oldErrorR = 0.0;
+	/**
+	 * call recursively
+	 * 
+	 * @param toTravel in inches
+	 * @return if it is done
+	 */
 	protected boolean travel(double toTravel){
 		if(resetD){
 			lStart = drive.getLeftDistance();
@@ -154,6 +161,39 @@ public abstract class AutonomousBase {
 		return !DataPool.getBooleanData("vision", "found");
 	}
 	
+	protected void shoot(double shooterRPM){
+		shooter.setRPM(shooterRPM);
+		shooter.setHopperSpeed(0.7);
+		shooter.setIntakeSpeed(1.0);
+		if(shooter.withinRange(40) && shooter.getSetPoint() > 0.0){
+			shooter.setTowerSpeed(1.0);
+		}else if(shooter.getSensor()){
+			shooter.setTowerSpeed(0.4);
+		}else{
+			shooter.setTowerSpeed(0.0);
+		}
+	}
+	
+	protected void stopShooter(){
+		shooter.setHopperSpeed(0.0);
+		shooter.setIntakeSpeed(0.0);
+		shooter.setRPM(0.0);
+		shooter.setTowerSpeed(0.0);
+	}
+	
+	private double timer = -1;
+	protected boolean timePassed(double seconds) {
+		if(timer <= 0)
+			timer = Timer.getFPGATimestamp();
+		
+		if(Timer.getFPGATimestamp() - timer >= seconds){
+			timer = -1;
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
 	protected void nextStep(double delaySeconds){
 		step++;
 		resetValues();
@@ -163,6 +203,7 @@ public abstract class AutonomousBase {
 	private void resetValues(){
 		resetD = true;
 		resetT = true;
+		timer = -1;
 		sumL = 0.0;
 		sumR = 0.0;
 		counter = 0;

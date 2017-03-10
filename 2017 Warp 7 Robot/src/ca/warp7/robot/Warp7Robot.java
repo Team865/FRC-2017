@@ -54,10 +54,6 @@ public class Warp7Robot extends SampleRobot{
 		gearMech = new GearMech();
 		compressor = new Compressor(COMPRESSOR_PIN);
 		
-		XboxController driver = new XboxController(DRIVER_ID);
-        XboxController operator = new XboxController(OPERATOR_ID);
-        controls = new SingleRemote(driver, operator);
-		
 		driverStation = DriverStation.getInstance();
 		s4 = new DigitalInput(4);
 		s5 = new DigitalInput(5);
@@ -67,9 +63,11 @@ public class Warp7Robot extends SampleRobot{
 	}
 	
 	public void operatorControl(){
-		controls.reset();
-		
-		if(driverStation.isFMSAttached()) 
+		XboxController driver = new XboxController(DRIVER_ID);
+        XboxController operator = new XboxController(OPERATOR_ID);
+        controls = new SingleRemote(driver, operator);
+
+		if(driverStation.isFMSAttached())
 			compressor.setClosedLoopControl(false);
         else 
         	compressor.setClosedLoopControl(true);
@@ -105,7 +103,6 @@ public class Warp7Robot extends SampleRobot{
 	}
 	
 	public void disabled(){
-		auto.reset();
 		while (!isEnabled()) {
 			periodic();
 			Timer.delay(0.005);

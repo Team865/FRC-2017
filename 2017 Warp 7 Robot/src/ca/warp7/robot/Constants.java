@@ -7,12 +7,14 @@ public class Constants {
 	public static final int[] CLIMBER_MOTOR_PINS = { 4, 5};
 	public static final int[] HOPPER_SPIN_PINS = { 7 };
 	public static final int[] TOWER_SPIN_PINS = { 6 };
+	public static final int[] INTAKE_SPIN_PINS = { 9 };
 
 	// DIG Pins
 	public static final int LEFT_DRIVE_ENCODER_A = 0;
 	public static final int LEFT_DRIVE_ENCODER_B = 1;
 	public static final int RIGHT_DRIVE_ENCODER_A = 2;
 	public static final int RIGHT_DRIVE_ENCODER_B = 3;
+	public static final int PHOTOSENSOR_PIN = 9;
 	
 	// Solenoids (manifold ports)
 	public static final int FLIP_PORT = 4;

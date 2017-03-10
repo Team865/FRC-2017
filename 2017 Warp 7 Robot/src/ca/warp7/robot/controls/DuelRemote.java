@@ -23,10 +23,7 @@ public class DuelRemote extends ControlsBase {
 	public DuelRemote(XboxController driver, XboxController operator) {
 		this.driver = driver;
 		this.operator = operator;
-	}
-
-	@Override
-	public void reset() {
+		
 		rightStick = false;
 		driver.setRumble(RumbleType.kLeftRumble, 0);
         driver.setRumble(RumbleType.kRightRumble, 0);
