@@ -161,6 +161,18 @@ public abstract class AutonomousBase {
 		return !DataPool.getBooleanData("vision", "found");
 	}
 	
+	protected boolean gearMove() throws NullPointerException{
+		if(visionMove()){
+			drive.autoMove(0.3, 0.3);
+			Timer.delay(0.5);
+			if(!DataPool.getBooleanData("vision", "found")){ // if we don't see the target... finish
+				drive.autoMove(0.0, 0.0);
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	protected void shoot(double shooterRPM){
 		shooter.setRPM(shooterRPM);
 		shooter.setHopperSpeed(0.7);
@@ -172,6 +184,15 @@ public abstract class AutonomousBase {
 		}else{
 			shooter.setTowerSpeed(0.0);
 		}
+	}
+	
+	protected boolean shoot(double shooterRPM, double seconds){
+		shoot(shooterRPM);
+		if(timePassed(seconds)){
+			stopShooter();
+			return true;
+		}
+		return false;
 	}
 	
 	protected void stopShooter(){

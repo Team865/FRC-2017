@@ -1,34 +1,28 @@
 package ca.warp7.robot.auto;
 
-import ca.warp7.robot.misc.DataPool;
-import edu.wpi.first.wpilibj.Timer;
-
 public class ShootGearLeft extends AutonomousBase {
 	
 	@Override
 	public void periodic() {
 		switch(step){
 		case 1:
-			shoot(4450);
-			if(timePassed(6)){
-				stopShooter();
+			if(shoot(4450, 6))
 				nextStep(0.5);
-			}
 			break;
 		case 2:
-			if(relTurn(18)) // 14
+			if(relTurn(18))
 				nextStep(0.5);
 			break;
 		case 3:
-			if(travel(-3*12))  // -61.5
+			if(travel(-3*12))
 				nextStep(0.5);
 			break;
 		case 4:
-			if(relTurn(-81)) //~-83
+			if(relTurn(-81))
 				nextStep(0.5);
 			break;
 		case 5:
-			if(travel(4.25*12)) // arbitrary -> vision
+			if(travel(4.25*12))
 				nextStep(0.5);
 			break;
 		case 6:
@@ -41,36 +35,30 @@ public class ShootGearLeft extends AutonomousBase {
 			break;
 		case 8:	
 			try{
-				if(visionMove()){
-					Timer.delay(2);
-					nextStep(0.0);
-				}
+				if(gearMove())
+					nextStep(0.5);
 			}catch(NullPointerException npe){
-				System.err.println("RIP no jetson");
+				System.err.println("Nathan plug in the Jetson >:(");
 				step++;
 			}
 			break;
 		case 9:
-			try{
-				if(DataPool.getBooleanData("vision", "found")){
-					step--;
-					return;
-				}
-			}catch(NullPointerException npe){}
-			drive.autoMove(0, 0);
+			if(travel(-4))
+				nextStep(0.5);			
+		case 10:
 			gearMech.release();
 			nextStep(0.5);
 			break;
-		case 10:
+		case 11:
 			if(travel(-3.75*12))
 				nextStep(0.5);
 			break;
-		case 11:
+		case 12:
 			//-60 would be square with driver stations
 			if(relTurn(30))
 				nextStep(0.5);
 			break;
-		case 12:
+		case 13:
 			if(travel(-2*12))
 				nextStep(0.5);
 			break;
