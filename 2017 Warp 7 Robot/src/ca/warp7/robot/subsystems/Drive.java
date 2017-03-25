@@ -184,7 +184,7 @@ public class Drive{
 			shifter.set(b);
 	}
 	
-	public void slowPeriodic() {
+	public void periodic() {
 		drivePool.logDouble("gyro_angle", getRotation());
 		drivePool.logDouble("left_enc", rightEncoder.getDistance());
 		drivePool.logDouble("right_enc", leftEncoder.getDistance());

@@ -25,7 +25,6 @@ public abstract class AutonomousBase {
 		shooter = Warp7Robot.shooter;
 		step = 1;
 		reset();
-		resetValues();
 	}
 	
 	public abstract void periodic();
@@ -73,20 +72,25 @@ public abstract class AutonomousBase {
 	 */
 	protected boolean relTurn(double degrees) {
 		if(resetT)offset = drive.getRotation();
+
+		//degrees -= 10;
 		
 		double angle = drive.getRotation()-offset;
-		double kp = 8.0;
-		double kd = 3.0;
+		double kp = 4.0;
+		double kd = 0.0;
+		@SuppressWarnings("unused")
+		double ki = 0.0;
 		
 		double error = degrees-angle;
 		double speed = (kp*error/360) + ((error-errorOld)*kd/360);
 		if(Math.abs(error) < 3)speed = 0;
 		
-		
+		autoPool.logDouble("gyro error", error);
 		speed = Math.max(-1, Math.min(1, speed));
 		drive.autoMove(speed, -speed);
 		errorOld = error;
 		
+
 		if (Math.abs(error) < 3){
 			resetT = true;
 			return true;
@@ -118,9 +122,15 @@ public abstract class AutonomousBase {
 			distance = toTravel;
 		}
 		
+		/*
 		double kp = 2;
 		double kd = 0.1;
 		double ki = 0.0001;
+		*/
+		
+		double kp = 16;
+		double kd = 4;
+		double ki = 0;
 		
 		double errorL = toTravel - (drive.getLeftDistance()-lStart);
 		double errorR = toTravel - (drive.getRightDistance()-rStart);
@@ -133,10 +143,9 @@ public abstract class AutonomousBase {
 		if(Math.abs(errorL) < 0.25)speedL = 0;
 		if(Math.abs(errorR) < 0.25)speedR = 0;
 		
-		speedL = Math.max(-1,  Math.min(1, speedL));
-		speedR = Math.max(-1, Math.min(1, speedR));
-		//vvvvv remove this after fixing the encoders
-		speedR = speedL;
+		speedL = Math.max(-0.6,  Math.min(0.6, speedL));
+		speedR = Math.max(-0.6, Math.min(0.6, speedR));
+		
 		drive.autoMove(-speedL, -speedR);
 		oldErrorL = errorL;
 		oldErrorR = errorR;
@@ -146,8 +155,7 @@ public abstract class AutonomousBase {
 			sumR = 0.0;
 		}
 		
-		if(Math.abs(errorL) < 0.25){
-		// use this after the encoder is fixed if(Math.abs(errorL) < 1 && Math.abs(errorR) < 1){
+		if(Math.abs(errorL) < 0.25 && Math.abs(errorR) < 0.25){
 			resetD = true;
 			return true;
 		}else{

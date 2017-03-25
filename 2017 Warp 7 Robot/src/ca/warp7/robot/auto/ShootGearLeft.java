@@ -6,34 +6,18 @@ public class ShootGearLeft extends AutonomousBase {
 	public void periodic() {
 		switch(step){
 		case 1:
-			if(shoot(4450, 6))
-				nextStep(0.5);
+			if(travel(6*12))
+				nextStep(2);
 			break;
 		case 2:
-			if(relTurn(18))
+			if(relTurn(-60))
 				nextStep(0.5);
 			break;
 		case 3:
-			if(travel(-3*12))
+			if(travel(2*12))
 				nextStep(0.5);
 			break;
 		case 4:
-			if(relTurn(-81))
-				nextStep(0.5);
-			break;
-		case 5:
-			if(travel(4.25*12))
-				nextStep(0.5);
-			break;
-		case 6:
-			if(relTurn(35))
-				nextStep(0.5);
-			break;
-		case 7:
-			if(travel(3*12))
-				nextStep(0.5);
-			break;
-		case 8:	
 			try{
 				if(gearMove())
 					nextStep(0.5);
@@ -42,25 +26,27 @@ public class ShootGearLeft extends AutonomousBase {
 				step++;
 			}
 			break;
-		case 9:
+		case 5:
 			if(travel(-4))
 				nextStep(0.5);			
-		case 10:
+		case 6:
 			gearMech.release();
 			nextStep(0.5);
 			break;
-		case 11:
-			if(travel(-3.75*12))
+		case 7:
+			if(travel(-5*12))
 				nextStep(0.5);
 			break;
-		case 12:
-			//-60 would be square with driver stations
-			if(relTurn(30))
+		case 8:
+			if(relTurn(50))
 				nextStep(0.5);
 			break;
-		case 13:
-			if(travel(-2*12))
+		case 9:
+			if(travel(3*12))
 				nextStep(0.5);
+			break;
+		case 10:
+			// shooter vision
 			break;
 		default:
 			reset();

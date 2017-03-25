@@ -7,7 +7,7 @@ public class Constants {
 	public static final int[] CLIMBER_MOTOR_PINS = { 4, 5};
 	public static final int[] HOPPER_SPIN_PINS = { 7 };
 	public static final int[] TOWER_SPIN_PINS = { 6 };
-	public static final int[] INTAKE_SPIN_PINS = { 9 };
+	public static final int[] INTAKE_SPIN_PINS = { 8 };
 
 	// DIG Pins
 	public static final int LEFT_DRIVE_ENCODER_A = 0;
@@ -35,7 +35,7 @@ public class Constants {
 	// Robot dimensions and stuff
 	public static double WHEEL_DIAMETER = 4; // inches
 	public static double WHEEL_CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
-	public static int DRIVE_TICKS_PER_REV = 256;
+	public static int DRIVE_TICKS_PER_REV = 1024; //256
 	public static double DRIVE_INCHES_PER_TICK = WHEEL_CIRCUMFERENCE / DRIVE_TICKS_PER_REV;
 
     public static String ATTR_EX_MODE = "CameraAttributes::Exposure::Mode";

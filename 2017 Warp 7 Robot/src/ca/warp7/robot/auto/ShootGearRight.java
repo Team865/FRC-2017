@@ -4,8 +4,15 @@ public class ShootGearRight extends AutonomousBase{
 
 	@Override
 	public void periodic() {
-		// TODO Auto-generated method stub
-		
+		switch(step){
+		case 1:
+			if(relTurn(90))
+				nextStep(0.5);
+			break;
+		case 2:
+			step--;
+			break;
+		}
 	}
 
 }

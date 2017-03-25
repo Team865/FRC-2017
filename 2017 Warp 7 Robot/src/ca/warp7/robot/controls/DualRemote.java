@@ -4,20 +4,12 @@ import static ca.warp7.robot.Warp7Robot.compressor;
 import static ca.warp7.robot.controls.Control.DOWN;
 import static ca.warp7.robot.controls.Control.PRESSED;
 import static ca.warp7.robot.controls.Control.UP;
-import static edu.wpi.first.wpilibj.GenericHID.Hand.*;
+import static edu.wpi.first.wpilibj.GenericHID.Hand.kLeft;
+import static edu.wpi.first.wpilibj.GenericHID.Hand.kRight;
 
 import ca.warp7.robot.misc.DataPool;
 
-public class SingleRemote extends ControlsBase{
-	
-	private double rpm = 4450;
-	
-	
-	public SingleRemote() {
-		super();
-		
-		rpm = 4450;
-	}
+public class DualRemote extends ControlsBase {
 
 	@Override
 	public void periodic() {
@@ -25,38 +17,38 @@ public class SingleRemote extends ControlsBase{
 			
 			if(driver.getStickButton(kRight) == PRESSED)
 				drive.setDrivetrainReversed(!drive.driveReversed());
-			
+				
 			if(driver.getTrigger(kRight) == DOWN)
 				gearMech.release();
 			else if(driver.getTrigger(kRight) == UP)
 				gearMech.hold();
 			
-			if(driver.getYButton() == DOWN)
+			if(operator.getBumper(kRight) == DOWN)
 				climber.setSpeed(-1.0);
-			else if(driver.getYButton() == UP)
+			else if(operator.getBumper(kRight) == UP)
 				climber.setSpeed(0.0);
 			
-			if(driver.getBackButton() == PRESSED)
-				compressor.setClosedLoopControl(!compressor.getClosedLoopControl());	
+			if(operator.getBackButton() == PRESSED)
+				compressor.setClosedLoopControl(!compressor.getClosedLoopControl());
 			
-			if(driver.getBButton() == DOWN)
-				shooter.setRPM(rpm);
-			else if(driver.getBButton() == UP)
+			if(operator.getTrigger(kLeft) == DOWN)
+				shooter.setRPM(4450);
+			else if(operator.getTrigger(kLeft) == UP)
 				shooter.setRPM(0);
-			
+
 			if(driver.getXButton() == PRESSED)
-				gearMech.flippedyFlip();	
+					gearMech.flippedyFlip();
 			
 			double hop = 0.7;
 			double reverseHop = -0.6;
 			double tower = 1.0;
 			double slowTower = 0.4;
 			double intake = 1.0;
-			 if (driver.getDpad(90) == DOWN){
+			 if (operator.getDpad(90) == DOWN){
 				shooter.setHopperSpeed(reverseHop);
 				shooter.setIntakeSpeed(intake);
 				shooter.setTowerSpeed(0.0);
-			}else if(driver.getAButton() == DOWN){
+			}else if(operator.getAButton() == DOWN){
 				shooter.setHopperSpeed(hop);
 				shooter.setIntakeSpeed(intake);
 				if(shooter.withinRange(40) && shooter.getSetPoint() > 0.0){
@@ -66,24 +58,13 @@ public class SingleRemote extends ControlsBase{
 				}else{
 					shooter.setTowerSpeed(0.0);
 				}
-			}else if(driver.getAButton() == UP){
+			}else if(operator.getAButton() == UP){
 				shooter.setIntakeSpeed(0.0);
 				shooter.setHopperSpeed(0.0);
 				shooter.setTowerSpeed(0.0);
 			}
-			 
-			// vvvv for testing rpm's only don't use this during an actually comp
-			/*
-			 if(driver.getDpad(0) == DOWN)
-				rpm += 5;
-			else if (driver.getDpad(180) == DOWN)
-				rpm -= 5;
-			else if (driver.getDpad(270) == DOWN)
-				rpm = 4450;
-			 */
-			 
-			//drive.tankDrive(driver.getY(kLeft), driver.getY(kRight));
-			drive.cheesyDrive(-driver.getX(kRight), driver.getY(kLeft), driver.getBumper(kLeft) == DOWN, driver.getTrigger(kLeft) == DOWN, driver.getBumper(kRight) != DOWN);
+			
+			drive.cheesyDrive(-driver.getX(kRight), driver.getY(kLeft), driver.getBumper(kLeft) == DOWN, false, driver.getBumper(kRight) != DOWN);
 		}else{
 			try{
 				if(DataPool.getBooleanData("vision", "found")){
@@ -91,10 +72,7 @@ public class SingleRemote extends ControlsBase{
 				}else{
 					drive.cheesyDrive(-driver.getX(kRight), driver.getY(kLeft), driver.getBumper(kLeft) == DOWN, driver.getTrigger(kLeft) == DOWN, driver.getBumper(kRight) != DOWN);
 				}
-			}catch(Exception e){
-				System.out.println("me no work no moar");
-			}
+			}catch(Exception e){}
 		}
 	}
-
 }
