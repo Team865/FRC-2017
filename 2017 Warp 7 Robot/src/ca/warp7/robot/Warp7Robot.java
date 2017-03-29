@@ -4,14 +4,14 @@ import static ca.warp7.robot.Constants.COMPRESSOR_PIN;
 import static ca.warp7.robot.auto.AutonomousBase.autoPool;
 
 import ca.warp7.robot.auto.AutonomousBase;
-import ca.warp7.robot.auto.GearCentre;
-import ca.warp7.robot.auto.GearHopperLeft;
-import ca.warp7.robot.auto.GearHopperRight;
+import ca.warp7.robot.auto.CentreGear;
+import ca.warp7.robot.auto.GearLeft;
+import ca.warp7.robot.auto.GearRight;
 import ca.warp7.robot.auto.Nothing;
-import ca.warp7.robot.auto.ShootGearLeft;
-import ca.warp7.robot.auto.ShootGearRight;
+import ca.warp7.robot.auto.ShootBlue;
+import ca.warp7.robot.auto.ShootRed;
 import ca.warp7.robot.controls.ControlsBase;
-import ca.warp7.robot.controls.DualRemote;
+import ca.warp7.robot.controls.TestRemote;
 import ca.warp7.robot.misc.DataPool;
 import ca.warp7.robot.subsystems.Climber;
 import ca.warp7.robot.subsystems.Drive;
@@ -60,7 +60,7 @@ public class Warp7Robot extends SampleRobot{
 	}
 	
 	public void operatorControl(){
-        controls = new DualRemote();
+        controls = new TestRemote();
 
 		if(driverStation.isFMSAttached())
 			compressor.setClosedLoopControl(false);
@@ -78,15 +78,15 @@ public class Warp7Robot extends SampleRobot{
 	public void autonomous(){
 		
 		if(!s4.get())
-			auto = new ShootGearLeft();
+			auto = new CentreGear();
 		else if(!s5.get())
-			auto = new ShootGearRight();
+			auto = new GearRight();
 		else if(!s6.get())
-			auto = new GearHopperLeft();
+			auto = new GearLeft();
 		else if(!s7.get())
-			auto = new GearHopperRight();
+			auto = new ShootRed();
 		else if(!s8.get())
-			auto = new GearCentre();
+			auto = new ShootBlue();
 		else
 			auto = new Nothing();
 		

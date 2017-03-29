@@ -1,15 +1,23 @@
 package ca.warp7.robot.auto;
 
-public class GearCentre extends AutonomousBase {
+public class GearLeft extends AutonomousBase{
 
 	@Override
 	public void periodic() {
 		switch(step){
 		case 1:
-			if(travel(3*12))
+			if(travel(6*12))
 				nextStep(0.5);
 			break;
 		case 2:
+			if(relTurn(60))
+				nextStep(0.5);
+			break;
+		case 3:
+			if(travel(3*12))
+				nextStep(0.5);
+			break;
+		case 4:
 			try{
 				if(gearMove())
 					nextStep(0.5);
@@ -18,29 +26,31 @@ public class GearCentre extends AutonomousBase {
 				step++;
 			}
 			break;
-		case 3:
-			if(travel(-4))
-				nextStep(0.5);			
-		case 4:
-			gearMech.release();
-			nextStep(0.5);
-			break;
 		case 5:
-			if(travel(-4*12))
+			if(travel(-2.5))
 				nextStep(0.5);
 			break;
 		case 6:
-			if(relTurn(60))
-				nextStep(0.5);
+			gearMech.release();
+			nextStep(0.5);
 			break;
 		case 7:
-			if(shoot(5500, 6.5))
+			if(travel(-(5*12-2.5)))
+				nextStep(0.5);
+			break;
+		case 8:
+			if(relTurn(-60))
+				nextStep(0.5);
+			break;
+		case 9:
+			if(travel(3*12))
 				nextStep(0.5);
 			break;
 		default:
 			reset();
 			break;
 		}
+
 	}
 
 }

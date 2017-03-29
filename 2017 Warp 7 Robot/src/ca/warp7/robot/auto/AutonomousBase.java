@@ -33,7 +33,7 @@ public abstract class AutonomousBase {
 		drive.autoMove(0, 0);
 		stopShooter();
 		gearMech.hold();
-		drive.autoShift(false);
+		drive.autoShift(true);
 		resetValues();
 	}
 	
@@ -64,7 +64,7 @@ public abstract class AutonomousBase {
 	private boolean resetT = true;
 	private double offset = 0.0;
 	/**
-	 * negative values turn clockwise, positive counter clockwise
+	 * negative values turn counter clockwise, positive clockwise
 	 * 
 	 * @param degrees
 	 *            relative (0 is where you are)
@@ -86,6 +86,8 @@ public abstract class AutonomousBase {
 		if(Math.abs(error) < 3)speed = 0;
 		
 		autoPool.logDouble("gyro error", error);
+		autoPool.logBoolean("Turn in Tolerance", Math.abs(error) < 3);
+				
 		speed = Math.max(-1, Math.min(1, speed));
 		drive.autoMove(speed, -speed);
 		errorOld = error;
@@ -96,6 +98,47 @@ public abstract class AutonomousBase {
 			return true;
 		}else{
 			resetT = false;
+			return false;
+		}
+	}
+
+	private boolean resetT2 = true;
+	private double offset2 = 0.0;
+	/**
+	 * negative values turn counter clockwise, positive clockwise
+	 * 
+	 * @param degrees
+	 *            relative (0 is where you are)
+	 *            Positive is to the right
+	 */
+	protected boolean relTurn(double degrees, double allowableErrorOver, double allowableErrorUnder) {
+		if(resetT2)offset2 = drive.getRotation();
+
+		//degrees -= 10;
+		
+		double angle = drive.getRotation()-offset2;
+		double kp = 4.0;
+		double kd = 0.0;
+		@SuppressWarnings("unused")
+		double ki = 0.0;
+		
+		double error = degrees-angle;
+		double speed = (kp*error/360) + ((error-errorOld)*kd/360);
+		if(Math.signum(error) == -1 && Math.abs(error) < allowableErrorOver || Math.signum(error) == 1 && Math.abs(error) < allowableErrorUnder)speed = 0;
+		
+		autoPool.logDouble("gyro error", error);
+		autoPool.logBoolean("Turn in Tolerance", Math.signum(error) == -1 && Math.abs(error) < allowableErrorOver || Math.signum(error) == 1 && Math.abs(error) < allowableErrorUnder);
+		
+		speed = Math.max(-1, Math.min(1, speed));
+		drive.autoMove(speed, -speed);
+		errorOld = error;
+		
+
+		if (Math.signum(error) == -1 && Math.abs(error) < allowableErrorOver || Math.signum(error) == 1 && Math.abs(error) < allowableErrorUnder){
+			resetT2 = true;
+			return true;
+		}else{
+			resetT2 = false;
 			return false;
 		}
 	}
@@ -142,6 +185,9 @@ public abstract class AutonomousBase {
 		double speedR = (kp*errorR)/Math.abs(rStart+distance) + ((errorR-oldErrorR)*kd/Math.abs(rStart+distance))+ki*sumR;
 		if(Math.abs(errorL) < 0.25)speedL = 0;
 		if(Math.abs(errorR) < 0.25)speedR = 0;
+		
+		autoPool.logBoolean("L Encoder in Tolerance", Math.abs(errorR) < 0.25);
+		autoPool.logBoolean("R Encoder in Tolerance", Math.abs(errorL) < 0.25);
 		
 		speedL = Math.max(-0.6,  Math.min(0.6, speedL));
 		speedR = Math.max(-0.6, Math.min(0.6, speedR));
@@ -226,12 +272,15 @@ public abstract class AutonomousBase {
 	protected void nextStep(double delaySeconds){
 		step++;
 		resetValues();
+		drive.autoMove(0, 0);
 		Timer.delay(delaySeconds);
 	}
 	
 	private void resetValues(){
 		resetD = true;
 		resetT = true;
+		resetT2 = true;
+		offset2 = 0.0;
 		timer = -1;
 		sumL = 0.0;
 		sumR = 0.0;

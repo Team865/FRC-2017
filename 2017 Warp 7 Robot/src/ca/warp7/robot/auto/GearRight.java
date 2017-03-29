@@ -1,20 +1,20 @@
 package ca.warp7.robot.auto;
 
-public class ShootGearLeft extends AutonomousBase {
-	
+public class GearRight extends AutonomousBase{
+
 	@Override
 	public void periodic() {
 		switch(step){
 		case 1:
 			if(travel(6*12))
-				nextStep(2);
+				nextStep(0.5);
 			break;
 		case 2:
 			if(relTurn(-60))
 				nextStep(0.5);
 			break;
 		case 3:
-			if(travel(2*12))
+			if(travel(3*12))
 				nextStep(0.5);
 			break;
 		case 4:
@@ -27,30 +27,29 @@ public class ShootGearLeft extends AutonomousBase {
 			}
 			break;
 		case 5:
-			if(travel(-4))
-				nextStep(0.5);			
+			if(travel(-2.5))
+				nextStep(0.5);
+			break;
 		case 6:
 			gearMech.release();
 			nextStep(0.5);
 			break;
 		case 7:
-			if(travel(-5*12))
+			if(travel(-(5*12-2.5)))
 				nextStep(0.5);
 			break;
 		case 8:
-			if(relTurn(50))
+			if(relTurn(60))
 				nextStep(0.5);
 			break;
 		case 9:
 			if(travel(3*12))
 				nextStep(0.5);
 			break;
-		case 10:
-			// shooter vision
-			break;
 		default:
 			reset();
 			break;
 		}
 	}
+
 }
