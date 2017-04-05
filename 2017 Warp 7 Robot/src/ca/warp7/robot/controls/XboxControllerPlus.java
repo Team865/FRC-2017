@@ -225,19 +225,19 @@ public class XboxControllerPlus {
 		dpad = b;
 		
 		if(b != a)
-			if(b >= 0)
+			if(b == value)
 				return PRESSED;
 			else
 				return RELEASED;
 		else
-			if(b >= 0)
+			if(b == value)
 				return DOWN;
 			else
 				return UP;
 	}
 
-	public void setRumble(RumbleType type, int value) {
-		controller.setRumble(type, value);
+	public void setRumble(RumbleType type, double d) {
+		controller.setRumble(type, d);
 	}
 
 	public double getX(Hand hand) {

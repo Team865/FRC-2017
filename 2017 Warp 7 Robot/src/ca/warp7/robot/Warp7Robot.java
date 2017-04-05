@@ -1,6 +1,7 @@
 package ca.warp7.robot;
 
 import static ca.warp7.robot.Constants.COMPRESSOR_PIN;
+import static ca.warp7.robot.Constants.LIGHT_PORT;
 import static ca.warp7.robot.auto.AutonomousBase.autoPool;
 
 import ca.warp7.robot.auto.AutonomousBase;
@@ -13,6 +14,7 @@ import ca.warp7.robot.auto.ShootRed;
 import ca.warp7.robot.controls.ControlsBase;
 import ca.warp7.robot.controls.TestRemote;
 import ca.warp7.robot.misc.DataPool;
+import ca.warp7.robot.misc.VisionCommand;
 import ca.warp7.robot.subsystems.Climber;
 import ca.warp7.robot.subsystems.Drive;
 import ca.warp7.robot.subsystems.GearMech;
@@ -21,6 +23,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Warp7Robot extends SampleRobot{
@@ -30,11 +33,14 @@ public class Warp7Robot extends SampleRobot{
 	public static Climber climber;
 	public static GearMech gearMech;
 	public static Compressor compressor;
+	public static VisionCommand vision;
 	
+	private static DataPool visionPool;
 	private static AutonomousBase auto;
 	private static ControlsBase controls;
 	
 	private DriverStation driverStation;
+	public static Solenoid light;
 	private DigitalInput s4;
 	private DigitalInput s5;
 	private DigitalInput s6;
@@ -51,7 +57,11 @@ public class Warp7Robot extends SampleRobot{
 		gearMech = new GearMech();
 		compressor = new Compressor(COMPRESSOR_PIN);
 		
+		visionPool = new DataPool("vision");
+		vision = VisionCommand.OFF;
+		
 		driverStation = DriverStation.getInstance();
+		light = new Solenoid(LIGHT_PORT);
 		s4 = new DigitalInput(4);
 		s5 = new DigitalInput(5);
 		s6 = new DigitalInput(6);
@@ -106,6 +116,17 @@ public class Warp7Robot extends SampleRobot{
 	
 	public void periodic(){
 		drive.periodic();
+		
+		/*
+		visionPool.logData("command", vision.name());
+		boolean light;
+		try{
+			light = DataPool.getBooleanData("vision", "light");
+		}catch(Exception e){
+			light = false;
+		}
+		this.light.set(light);
+		*/
 		
 		if(!s4.get())
 			autoPool.logInt("Switch Key", 4);

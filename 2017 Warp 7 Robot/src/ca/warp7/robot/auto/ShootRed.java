@@ -10,15 +10,15 @@ public class ShootRed extends AutonomousBase{
 				nextStep(0.0);
 			break;
 		case 2:
-			if(travel(4*12))
+			if(travel(4*12, 0.9))
 				nextStep(0.0);
 			break;
 		case 3:
-			if(relTurn(-90, 10, 15))
+			//if(relTurn(-90, 10, 15))
 				nextStep(0.0);
 			break;
 		case 4:
-			if(travel(-10*12))
+			if(travel(-10*12, 0.9))
 				nextStep(0.0);
 			break;
 		default:

@@ -49,9 +49,11 @@ public class Shooter {
 		masterTalon.reverseSensor(true);
 		masterTalon.setProfile(0);
 		masterTalon.setF(0);
-		masterTalon.setP(0.08);
-		masterTalon.setI(0.0002);
-		masterTalon.setD(2);
+		masterTalon.setP(0.2);
+		masterTalon.setI(0.00035);
+		masterTalon.setD(12);
+		
+		//p = 0.175, i = 0.00009, d = 4
 		//p = 0.08, I = 0.000125, D = 2, 12.2 v idle, 0.6 tower w/ velcrow // 50 in 4.5 in rot on the back, left motor only, no fly wheel
 		//p = 0.08, I = 0.00015, D = 2, 12.2 v idle, 0.6 tower w/ velcrow // 50 in 4.5 in rot on the back, both motors, no fly wheel
 		
@@ -93,17 +95,17 @@ public class Shooter {
 	}
 	
 	public void setHopperSpeed(double speed){
-		if(hopperSpin.get() != speed)
+		//if(hopperSpin.get() != speed)
 			hopperSpin.set(speed);
 	}
 	
 	public void setTowerSpeed(double speed){
-		if(towerSpin.get() != speed)
+		//if(towerSpin.get() != speed)
 			towerSpin.set(speed);
 	}
 	
 	public void setIntakeSpeed(double speed){
-		if(intake.get() != speed)
+		//if(intake.get() != speed)
 			intake.set(speed);
 	}
 
