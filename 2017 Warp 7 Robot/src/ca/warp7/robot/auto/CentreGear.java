@@ -1,33 +1,37 @@
 package ca.warp7.robot.auto;
 
+import ca.warp7.robot.Warp7Robot;
+
 public class CentreGear extends AutonomousBase {
 	
 	@Override
 	public void periodic() {
+		Warp7Robot.compressor.setClosedLoopControl(false);
+		drive.autoShift(false);
+		
 		switch(step){
 		case 1:
-			if(travel(4.5*12, 0.9))
-				nextStep(0.5);
-			break;
-		case 2:
-			try{
-				if(gearMove())
-					nextStep(0.5);
-			}catch(NullPointerException npe){
-				System.err.println("Nathan plug in the Jetson >:(");
+			if(gearMove()){
+				nextStep(0.2);
 				step++;
 			}
+			
+			if(timePassed(4)){
+				gearMech.flippedyFlip();
+				nextStep(0.0);
+			}
 			break;
-		case 5:
-			if(travel(-2.5, 0.9))
-				nextStep(0.5);
+		case 2:
+			drive.autoMove(-0.4, -0.4);
+			if(timePassed(0.75))
+				nextStep(0.2);
 			break;
-		case 6:
+		case 3:
 			gearMech.release();
 			nextStep(0.5);
 			break;
-		case 7:
-			if(travel(-(2*12-2.5), 0.9))
+		case 4:
+			if(travel(-(2*12), 0.75))
 				nextStep(0.5);
 			break;
 		default:

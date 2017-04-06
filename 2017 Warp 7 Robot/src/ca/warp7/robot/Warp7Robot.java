@@ -8,11 +8,11 @@ import ca.warp7.robot.auto.AutonomousBase;
 import ca.warp7.robot.auto.CentreGear;
 import ca.warp7.robot.auto.GearLeft;
 import ca.warp7.robot.auto.GearRight;
+import ca.warp7.robot.auto.HopperBlue;
+import ca.warp7.robot.auto.HopperRed;
 import ca.warp7.robot.auto.Nothing;
-import ca.warp7.robot.auto.ShootBlue;
-import ca.warp7.robot.auto.ShootRed;
 import ca.warp7.robot.controls.ControlsBase;
-import ca.warp7.robot.controls.TestRemote;
+import ca.warp7.robot.controls.DualRemote;
 import ca.warp7.robot.misc.DataPool;
 import ca.warp7.robot.misc.VisionCommand;
 import ca.warp7.robot.subsystems.Climber;
@@ -35,6 +35,7 @@ public class Warp7Robot extends SampleRobot{
 	public static Compressor compressor;
 	public static VisionCommand vision;
 	
+	@SuppressWarnings("unused")
 	private static DataPool visionPool;
 	private static AutonomousBase auto;
 	private static ControlsBase controls;
@@ -70,7 +71,7 @@ public class Warp7Robot extends SampleRobot{
 	}
 	
 	public void operatorControl(){
-        controls = new TestRemote();
+        controls = new DualRemote();
 
 		if(driverStation.isFMSAttached())
 			compressor.setClosedLoopControl(false);
@@ -94,9 +95,9 @@ public class Warp7Robot extends SampleRobot{
 		else if(!s6.get())
 			auto = new GearLeft();
 		else if(!s7.get())
-			auto = new ShootRed();
+			auto = new HopperRed();
 		else if(!s8.get())
-			auto = new ShootBlue();
+			auto = new HopperBlue();
 		else
 			auto = new Nothing();
 		

@@ -43,11 +43,11 @@ public abstract class AutonomousBase {
 	 *            Positive is to the right
 	 */
 	private double errorOld = 0.0;
-	protected boolean absTurn(double degrees) {
+	protected boolean absTurn(double degrees, double limit) {
 		degrees %= 360;
 		double error = degrees - drive.getRotation()%360;
 		
-		return relTurn(error);
+		return relTurn(error, limit);
 	}
 	
 	private boolean resetT = true;
@@ -62,7 +62,8 @@ public abstract class AutonomousBase {
 	 *            relative (0 is where you are)
 	 *            Positive is to the right
 	 */
-	protected boolean relTurn(double degrees) {
+	protected boolean relTurn(double degrees, double limit) {
+		limit = Math.abs(limit);
 		if(resetT){
 			errorSum = 0.0;
 			offset = drive.getRotation();
@@ -85,7 +86,7 @@ public abstract class AutonomousBase {
 		autoPool.logDouble("gyro error", error);
 		autoPool.logBoolean("Turn in Tolerance", Math.abs(error) < 3);
 				
-		speed = Math.max(-0.7, Math.min(0.7, speed));
+		speed = Math.max(-limit, Math.min(limit, speed));
 		drive.autoMove(speed, -speed);
 		errorOld = error;
 		
@@ -216,28 +217,38 @@ public abstract class AutonomousBase {
 		return false;
 	}
 	
+	private boolean temp = true;
 	protected boolean visionTurn(Direction dir) throws NullPointerException{
-		if(DataPool.getBooleanData("vision", "found"))
-			drive.autoMove(DataPool.getDoubleData("vision", "left"), DataPool.getDoubleData("vision", "right"));
+		if(DataPool.getBooleanData("vision", "S_found"))
+			if(temp){
+				drive.autoMove(DataPool.getDoubleData("vision", "S_left"), DataPool.getDoubleData("vision", "S_right"));
+				Timer.delay(0.01);
+				temp = false;
+			}else{
+				drive.autoMove(0, 0);
+				Timer.delay(0.01);
+				temp = true;
+			}
+				
 		else
 			if(dir == Direction.CLOCKWISE)
-				drive.autoMove(0.5, -0.5);
-			else
 				drive.autoMove(-0.5, 0.5);
+			else
+				drive.autoMove(0.5, -0.5);
 		
-		return Math.abs(DataPool.getDoubleData("vision", "right")) < 0.15;
+		return Math.abs(DataPool.getDoubleData("vision", "S_right")) < 0.23;
 	}
 	
 	protected boolean visionMove() throws NullPointerException{
-		drive.autoMove(DataPool.getDoubleData("vision", "left"), DataPool.getDoubleData("vision", "right"));
-		return !DataPool.getBooleanData("vision", "found");
+		drive.autoMove(DataPool.getDoubleData("vision", "D_left"), DataPool.getDoubleData("vision", "D_right"));
+		return !DataPool.getBooleanData("vision", "D_found");
 	}
 	
 	protected boolean gearMove() throws NullPointerException{
 		if(visionMove()){
-			drive.autoMove(0.3, 0.3);
-			Timer.delay(0.5);
-			if(!DataPool.getBooleanData("vision", "found")){ // if we don't see the target... finish
+			drive.autoMove(-0.3, -0.3);
+			Timer.delay(0.8);
+			if(!DataPool.getBooleanData("vision", "D_found") || Math.abs(DataPool.getDoubleData("vision", "D_right")) < 0.15){ // if we don't see the target... finish
 				drive.autoMove(0.0, 0.0);
 				return true;
 			}
@@ -265,6 +276,22 @@ public abstract class AutonomousBase {
 			return true;
 		}
 		return false;
+	}
+	
+	private double rpm = 0.0;
+	protected boolean autoShoot(double seconds) throws NullPointerException{
+		if(rpm <= 0.0){
+			double pixelHeight = DataPool.getDoubleData("vision", "S_dist");
+			rpm = 0.018*Math.pow(pixelHeight, 2)-19.579*pixelHeight+9675.03;
+		}
+		
+		if(shoot(rpm, seconds)){
+			rpm = 0.0;
+			stopShooter();
+			return true;
+		}else{
+			return false;
+		}
 	}
 	
 	protected void stopShooter(){
@@ -310,8 +337,10 @@ public abstract class AutonomousBase {
 		oldErrorL = 0.0;
 		oldErrorR = 0.0;
 		offset = 0.0;
+		temp = true;
 		errorOld = 0.0;
 		sCounter = 0;
+		rpm = 0.0;
 	}
 	
 	protected enum Direction{

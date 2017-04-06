@@ -6,12 +6,14 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.ITable;
 
 public class DataPool{
+	
 	private static NetworkTable table = NetworkTable.getTable("data");
 	private static ArrayList<DataPool> allPools = new ArrayList<>();
 	private ArrayList<Object> data;
 	private ArrayList<String> keys;
 	private String name;
 
+	
 	public DataPool(String name) {
 		allPools.add(this);
 		data = new ArrayList<>();
