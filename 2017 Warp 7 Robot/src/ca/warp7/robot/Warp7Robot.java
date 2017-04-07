@@ -129,6 +129,12 @@ public class Warp7Robot extends SampleRobot{
 		this.light.set(light);
 		*/
 		
+		try{
+			autoPool.logInt("Step", auto.step);
+		}catch(Exception e){
+			autoPool.logInt("Step", 0);
+		}
+		
 		if(!s4.get())
 			autoPool.logInt("Switch Key", 4);
 		else if(!s5.get())

@@ -12,5 +12,11 @@ public class Nothing extends AutonomousBase {
 		   
 		   I guess not?
 		*/
+		if(step == 1){
+			if(travel(7*12, 0.9))
+				nextStep(0.5);
+		}else{
+			reset();
+		}
 	}
 }

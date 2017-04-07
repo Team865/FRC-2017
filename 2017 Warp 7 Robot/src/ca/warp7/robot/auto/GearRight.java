@@ -17,7 +17,7 @@ public class GearRight extends AutonomousBase{
 				nextStep(0.2);
 			break;
 		case 2:
-			if(relTurn(-55, 0.7))
+			if(relTurn(-45, 0.7))
 				nextStep(0.2);
 			break;
 		case 3:
