@@ -4,7 +4,7 @@ import ca.warp7.robot.Warp7Robot;
 
 public class GearRight extends AutonomousBase{
 
-	private double rpm = 4706;
+	double rpm = 4706;
 	@Override
 	public void periodic() {
 		Warp7Robot.compressor.setClosedLoopControl(false);
@@ -64,8 +64,9 @@ public class GearRight extends AutonomousBase{
 		case 10:
 			if(autoShoot(6))
 				nextStep(0.5);
-			break;	
+			break;
 		default:
+			drive.autoMove(0, 0);
 			reset();
 			break;
 		}

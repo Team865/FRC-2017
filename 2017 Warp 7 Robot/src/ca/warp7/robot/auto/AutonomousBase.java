@@ -37,6 +37,29 @@ public abstract class AutonomousBase {
 		resetValues();
 	}
 	
+	private boolean resetC = true;
+	private double offsetC = 0.0;
+	protected boolean fakeCurve(double left, double right, double degrees){
+		if(resetC){
+			offsetC = drive.getRotation();
+			resetC = false;
+		}
+		
+		double angle = drive.getRotation()-offsetC;
+		double error = degrees-angle;
+		drive.autoMove(left, right);
+		
+		if(Math.abs(error) < 6){
+			drive.autoMove(0, 0);
+			resetC = true;
+			return true;
+		}else{
+			resetC = false;
+			return false;
+		}
+		
+	}
+	
 	/**
 	 * @param degrees
 	 *            relative (0 is where you are)
@@ -46,6 +69,7 @@ public abstract class AutonomousBase {
 	protected boolean absTurn(double degrees, double limit) {
 		degrees %= 360;
 		double error = degrees - drive.getRotation()%360;
+		
 		
 		return relTurn(error, limit);
 	}
@@ -341,6 +365,8 @@ public abstract class AutonomousBase {
 		errorOld = 0.0;
 		sCounter = 0;
 		rpm = 0.0;
+		resetC = true;
+		offsetC = 0.0;
 	}
 	
 	protected enum Direction{

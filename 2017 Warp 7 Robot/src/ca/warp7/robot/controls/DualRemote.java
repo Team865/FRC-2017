@@ -12,14 +12,14 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
 public class DualRemote extends ControlsBase {
 
-	private double rpm = 4706;
+	private double rpm = 4450;
 	private double pixelOffset = -10;
 	
 	
 	public DualRemote() {
 		super();
 		
-		rpm = 4706;
+		rpm = 4450;
 	}
 	
 	@Override
@@ -42,7 +42,9 @@ public class DualRemote extends ControlsBase {
 			if(operator.getBackButton() == PRESSED)
 				compressor.setClosedLoopControl(!compressor.getClosedLoopControl());
 			
-			if(operator.getTrigger(kLeft) == DOWN)
+			if(operator.getBButton() == DOWN)
+				shooter.setRPM(4425);
+			else if(operator.getTrigger(kLeft) == DOWN)
 				shooter.setRPM(rpm);
 			else if(operator.getTrigger(kLeft) == UP)
 				shooter.setRPM(0);
@@ -81,9 +83,11 @@ public class DualRemote extends ControlsBase {
 			shooter.setHopperSpeed(0.0);
 			shooter.setTowerSpeed(0.0);
 			
-			if(driver.getBButton() == DOWN)
+			if(operator.getBButton() == DOWN)
+				shooter.setRPM(4425);
+			else if(operator.getTrigger(kLeft) == DOWN)
 				shooter.setRPM(rpm);
-			else if(driver.getBButton() == UP)
+			else if(operator.getTrigger(kLeft) == UP)
 				shooter.setRPM(0);
 			
 			try{
