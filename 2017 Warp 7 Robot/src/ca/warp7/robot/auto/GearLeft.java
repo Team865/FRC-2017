@@ -4,9 +4,7 @@ import ca.warp7.robot.Warp7Robot;
 
 public class GearLeft extends AutonomousBase{
 
-	private double rpm = 4706;
-	
-	
+	double rpm = 4706;
 	@Override
 	public void periodic() {
 		Warp7Robot.compressor.setClosedLoopControl(false);
@@ -63,6 +61,7 @@ public class GearLeft extends AutonomousBase{
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
+				endAuto();
 			}
 			break;
 		case 5:
@@ -79,14 +78,14 @@ public class GearLeft extends AutonomousBase{
 				nextStep(0.5);
 			break;
 		case 8:
-			//shooter.setRPM(rpm);
+			shooter.setRPM(rpm);
 			if(relTurn(-15, 0.7)){
 				nextStep(0.5);
 				step++;
 			}
 			break;
 		case 9:
-			//shooter.setRPM(rpm);
+			shooter.setRPM(rpm);
 			if(travel(-(1*12+2), 0.75))
 				nextStep(0.5);
 			break;
@@ -101,6 +100,7 @@ public class GearLeft extends AutonomousBase{
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
+				endAuto();
 			}
 			break;
 		case 11:
@@ -113,13 +113,14 @@ public class GearLeft extends AutonomousBase{
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
+				endAuto();
 			}
-			break;	
+			break;
 		default:
+			drive.autoMove(0, 0);
 			reset();
 			break;
 		}
 	}
-
 
 }

@@ -61,6 +61,7 @@ public class GearRight extends AutonomousBase{
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
+				endAuto();
 			}
 			break;
 		case 5:
@@ -99,6 +100,7 @@ public class GearRight extends AutonomousBase{
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
+				endAuto();
 			}
 			break;
 		case 11:
@@ -111,6 +113,7 @@ public class GearRight extends AutonomousBase{
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
+				endAuto();
 			}
 			break;
 		default:
