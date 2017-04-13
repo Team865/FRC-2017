@@ -7,7 +7,7 @@ public class RedGeorge extends AutonomousBase {
 		//red
 		switch(step){
 		case 1:
-			if(shoot(4425, 6))
+			if(shoot(4450, 6))
 				nextStep(0.0);
 			break;
 		case 2:
@@ -15,7 +15,7 @@ public class RedGeorge extends AutonomousBase {
 				nextStep(0.0);
 			break;
 		case 3:
-			if(relTurn(-75, 0.6))
+			if(relTurn(-67, 0.6))
 				nextStep(0.0);
 			break;
 		case 4:

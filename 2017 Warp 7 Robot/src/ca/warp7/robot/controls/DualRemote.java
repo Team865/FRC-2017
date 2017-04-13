@@ -1,5 +1,6 @@
 package ca.warp7.robot.controls;
 
+import static ca.warp7.robot.Constants.pixelOffset;
 import static ca.warp7.robot.Warp7Robot.compressor;
 import static ca.warp7.robot.controls.Control.DOWN;
 import static ca.warp7.robot.controls.Control.PRESSED;
@@ -13,7 +14,6 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 public class DualRemote extends ControlsBase {
 
 	private double rpm = 4450;
-	private double pixelOffset = -10;
 	
 	
 	public DualRemote() {
@@ -78,6 +78,29 @@ public class DualRemote extends ControlsBase {
 			}
 			
 			drive.cheesyDrive(-driver.getX(kRight), driver.getY(kLeft), driver.getBumper(kLeft) == DOWN, false, driver.getBumper(kRight) != DOWN);
+		}else if(operator.getYButton() == DOWN){
+			shooter.setIntakeSpeed(0.0);
+			shooter.setHopperSpeed(0.0);
+			shooter.setTowerSpeed(0.0);
+			
+			if(operator.getBButton() == DOWN)
+				shooter.setRPM(4425);
+			else if(operator.getTrigger(kLeft) == DOWN)
+				shooter.setRPM(rpm);
+			else if(operator.getTrigger(kLeft) == UP)
+				shooter.setRPM(0);
+			
+			try{
+				boolean found = DataPool.getBooleanData("vision", "D_found");
+				if(found){
+					drive.autoMove(Math.min(0.75, Math.max(DataPool.getDoubleData("vision", "D_left"), -0.75)), Math.min(0.75, Math.max(DataPool.getDoubleData("vision", "D_right"), -0.75)));
+				}else{
+					drive.cheesyDrive(-driver.getX(kRight), driver.getY(kLeft), driver.getBumper(kLeft) == DOWN, driver.getTrigger(kLeft) == DOWN, false);
+				}
+			}catch(Exception e){
+				System.err.println("WARNING JETSON FAILED");
+				drive.cheesyDrive(-driver.getX(kRight), driver.getY(kLeft), driver.getBumper(kLeft) == DOWN, driver.getTrigger(kLeft) == DOWN, false);
+			}
 		}else{
 			shooter.setIntakeSpeed(0.0);
 			shooter.setHopperSpeed(0.0);

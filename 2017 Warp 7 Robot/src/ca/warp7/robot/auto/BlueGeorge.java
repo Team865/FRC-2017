@@ -6,7 +6,7 @@ public class BlueGeorge extends AutonomousBase {
 	public void periodic() {
 		switch(step){
 		case 1:
-			if(shoot(4425, 6))
+			if(shoot(4450, 6))
 				nextStep(0.0);
 			break;
 		case 2:

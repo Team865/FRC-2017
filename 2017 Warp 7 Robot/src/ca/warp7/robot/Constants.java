@@ -20,7 +20,7 @@ public class Constants {
 	public static final int FLIP_PORT = 4;
 	public static final int DRIVE_SHIFTER_PORT = 1;
 	public static final int GEAR_PISTON_PORT = 0;
-	public static final int LIGHT_PORT = 5;
+	public static final int LIGHT_PORT = 6;
 	
 	// Compressor
 	public static final int COMPRESSOR_PIN = 0;
@@ -38,6 +38,7 @@ public class Constants {
 	public static double WHEEL_CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
 	public static int DRIVE_TICKS_PER_REV = 1024; //256
 	public static double DRIVE_INCHES_PER_TICK = WHEEL_CIRCUMFERENCE / DRIVE_TICKS_PER_REV;
+	public static double pixelOffset = -10;
 
     public static String ATTR_EX_MODE = "CameraAttributes::Exposure::Mode";
     public static String ATTR_EX_VALUE = "CameraAttributes::Exposure::Value";

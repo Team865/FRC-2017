@@ -5,11 +5,11 @@ import static ca.warp7.robot.Constants.LIGHT_PORT;
 import static ca.warp7.robot.auto.AutonomousBase.autoPool;
 
 import ca.warp7.robot.auto.AutonomousBase;
-import ca.warp7.robot.auto.BlueGeorge;
+import ca.warp7.robot.auto.GearCentreBlue;
+import ca.warp7.robot.auto.GearCentreRed;
 import ca.warp7.robot.auto.GearLeft;
 import ca.warp7.robot.auto.GearRight;
-import ca.warp7.robot.auto.HopperBlue;
-import ca.warp7.robot.auto.HopperRed;
+import ca.warp7.robot.auto.Nothing;
 import ca.warp7.robot.auto.RedGeorge;
 import ca.warp7.robot.controls.ControlsBase;
 import ca.warp7.robot.controls.DualRemote;
@@ -89,17 +89,17 @@ public class Warp7Robot extends SampleRobot{
 	public void autonomous(){
 		
 		if(!s4.get())
-			auto = new BlueGeorge();
+			auto = new GearCentreRed();
 		else if(!s5.get())
-			auto = new GearRight();
+			auto = new GearCentreBlue();
 		else if(!s6.get())
-			auto = new GearLeft();
+			auto = new GearRight();
 		else if(!s7.get())
-			auto = new HopperRed();
+			auto = new GearLeft();
 		else if(!s8.get())
-			auto = new HopperBlue();
-		else
 			auto = new RedGeorge();
+		else
+			auto = new Nothing();
 		
 		while (isAutonomous() && isEnabled()) {
 			auto.periodic();
@@ -130,10 +130,18 @@ public class Warp7Robot extends SampleRobot{
 		*/
 		
 		try{
+			light.set(true);
+		}catch(Exception e){
+			light.set(false);
+		}
+		
+		try{
 			autoPool.logInt("Step", auto.step);
 		}catch(Exception e){
 			autoPool.logInt("Step", 0);
 		}
+		
+		autoPool.logData("I AM HERE", "true");
 		
 		if(!s4.get())
 			autoPool.logInt("Switch Key", 4);

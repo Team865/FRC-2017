@@ -1,5 +1,7 @@
 package ca.warp7.robot.auto;
 
+import static ca.warp7.robot.Constants.pixelOffset;
+
 import ca.warp7.robot.Warp7Robot;
 import ca.warp7.robot.misc.DataPool;
 import ca.warp7.robot.subsystems.Climber;
@@ -58,6 +60,14 @@ public abstract class AutonomousBase {
 			return false;
 		}
 		
+	}
+	
+	protected void endAuto(){
+		step = -1;
+	}
+	
+	protected boolean gearGoalVisible() throws NullPointerException{
+		return DataPool.getBooleanData("vision", "D_found");
 	}
 	
 	/**
@@ -256,15 +266,15 @@ public abstract class AutonomousBase {
 				
 		else
 			if(dir == Direction.CLOCKWISE)
-				drive.autoMove(-0.5, 0.5);
-			else
 				drive.autoMove(0.5, -0.5);
+			else
+				drive.autoMove(-0.5, 0.5);
 		
-		return Math.abs(DataPool.getDoubleData("vision", "S_right")) < 0.23;
+		return DataPool.getBooleanData("vision", "S_found") && Math.abs(DataPool.getDoubleData("vision", "S_right")) < 0.23;
 	}
 	
 	protected boolean visionMove() throws NullPointerException{
-		drive.autoMove(DataPool.getDoubleData("vision", "D_left"), DataPool.getDoubleData("vision", "D_right"));
+		drive.autoMove(Math.min(0.75, Math.max(DataPool.getDoubleData("vision", "D_left"), -0.75)), Math.min(0.75, Math.max(DataPool.getDoubleData("vision", "D_right"), -0.75)));
 		return !DataPool.getBooleanData("vision", "D_found");
 	}
 	
@@ -284,7 +294,7 @@ public abstract class AutonomousBase {
 		shooter.setRPM(shooterRPM);
 		shooter.setHopperSpeed(1.0);
 		shooter.setIntakeSpeed(1.0);
-		if(shooter.withinRange(30) && shooter.getSetPoint() > 0.0){
+		if(shooter.withinRange(25) && shooter.getSetPoint() > 0.0){
 			shooter.setTowerSpeed(1.0);
 		}else if(shooter.getSensor()){
 			shooter.setTowerSpeed(0.0);
@@ -305,7 +315,7 @@ public abstract class AutonomousBase {
 	private double rpm = 0.0;
 	protected boolean autoShoot(double seconds) throws NullPointerException{
 		if(rpm <= 0.0){
-			double pixelHeight = DataPool.getDoubleData("vision", "S_dist");
+			double pixelHeight = DataPool.getDoubleData("vision", "S_dist") + pixelOffset;
 			rpm = 0.018*Math.pow(pixelHeight, 2)-19.579*pixelHeight+9675.03;
 		}
 		

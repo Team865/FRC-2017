@@ -175,6 +175,7 @@ public class Drive{
 	}
 
 	public void autoMove(double left, double right) {
+		left *= 0.9;
 		leftDrive.set(limit(left, 1));
 		rightDrive.set(limit(right, 1));
 	}

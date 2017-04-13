@@ -1,11 +1,17 @@
 package ca.warp7.robot.auto;
 
 import ca.warp7.robot.Warp7Robot;
+import edu.wpi.first.wpilibj.Timer;
 
-public class GearLeft extends AutonomousBase{
+public class GearCentreRed extends AutonomousBase {
 
-	private double rpm = 4706;
+	public GearCentreRed(){
+		super();
+		
+		found = false;
+	}
 	
+	private boolean found = false;
 	
 	@Override
 	public void periodic() {
@@ -14,15 +20,6 @@ public class GearLeft extends AutonomousBase{
 		
 		switch(step){
 		case 1:
-			gearMech.hold();
-			if(travel(6*12+6, 0.75))
-				nextStep(0.2);
-			break;
-		case 2:
-			if(relTurn(45, 0.7))
-				nextStep(0.2);
-			break;
-		case 3:
 			drive.autoMove(-0.5, -0.5);
 			try{
 				if(gearGoalVisible())
@@ -46,16 +43,20 @@ public class GearLeft extends AutonomousBase{
 			}
 			gearMech.hold();
 			break;
-		case 4:
+		case 2:
 			try{
-				if(gearMove()){
-					nextStep(0.2);
-					step++;
-				}
-				
 				if(timePassed(4)){
-					gearMech.flippedyFlip();
-					nextStep(0.0);
+					if(!gearMove()){
+						gearMech.flippedyFlip();
+						drive.autoMove(-1, -1);
+						Timer.delay(0.75);
+						drive.autoMove(0, 0);
+					}
+					nextStep(0.5);
+				}else{
+					if(!gearMove()){
+						found = true;
+					}
 				}
 			}catch(Exception e){
 				System.err.println("NO JETSON!!!!!!");
@@ -63,63 +64,63 @@ public class GearLeft extends AutonomousBase{
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
+				endAuto();
 			}
 			break;
+		case 3:
+			if(found)
+				gearMech.release();
+			nextStep(0.2);
+			break;
+		case 4:
+			if(travel(-1*12, 0.35))
+				nextStep(0.2);
+			break;
 		case 5:
-			drive.autoMove(-0.4, -0.4);
-			if(timePassed(0.75))
+			if(travel(-4*12, 0.8))
 				nextStep(0.2);
 			break;
 		case 6:
-			gearMech.release();
-			nextStep(0.5);
+			shooter.setRPM(5000);
+			if(relTurn(-65, 0.6))
+				nextStep(0.0);
 			break;
 		case 7:
-			if(travel(-(2*12), 0.75))
-				nextStep(0.5);
+			shooter.setRPM(5000);
+			if(travel(-2*12, 0.85))
+				nextStep(0.2);
 			break;
 		case 8:
-			//shooter.setRPM(rpm);
-			if(relTurn(-15, 0.7)){
-				nextStep(0.5);
-				step++;
+			try{
+				shooter.setRPM(5000);
+				if(lineUpShooter(Direction.COUNTER_CLOCKWISE))
+					nextStep(0.0);
+			}catch(Exception e){
+				System.err.println("NO JETSON!!!!!!");
+				System.err.println("NO JETSON!!!!!!");
+				System.err.println("NO JETSON!!!!!!");
+				System.err.println("NO JETSON!!!!!!");
+				System.err.println("NO JETSON!!!!!!");
+				endAuto();
 			}
 			break;
 		case 9:
-			//shooter.setRPM(rpm);
-			if(travel(-(1*12+2), 0.75))
-				nextStep(0.5);
-			break;
-		case 10:
-			shooter.setRPM(rpm);
 			try{
-				if(lineUpShooter(Direction.CLOCKWISE))
-					nextStep(0.5);
+				if(autoShoot(10))
+					nextStep(0.0);
 			}catch(Exception e){
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
+				endAuto();
 			}
 			break;
-		case 11:
-			try{
-				if(autoShoot(6))
-					nextStep(0.5);
-			}catch(Exception e){
-				System.err.println("NO JETSON!!!!!!");
-				System.err.println("NO JETSON!!!!!!");
-				System.err.println("NO JETSON!!!!!!");
-				System.err.println("NO JETSON!!!!!!");
-				System.err.println("NO JETSON!!!!!!");
-			}
-			break;	
 		default:
 			reset();
 			break;
 		}
 	}
-
 
 }
