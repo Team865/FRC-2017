@@ -21,6 +21,10 @@ public class GearRight extends AutonomousBase{
 				nextStep(0.2);
 			break;
 		case 3:
+			if(travel(3*12, 0.75))
+				nextStep(0.1);
+			break;
+		case 4:
 			drive.autoMove(-0.5, -0.5);
 			try{
 				if(gearGoalVisible())
@@ -44,7 +48,7 @@ public class GearRight extends AutonomousBase{
 			}
 			gearMech.hold();
 			break;
-		case 4:
+		case 5:
 			try{
 				if(gearMove()){
 					nextStep(0.2);
@@ -64,32 +68,32 @@ public class GearRight extends AutonomousBase{
 				endAuto();
 			}
 			break;
-		case 5:
+		case 6:
 			drive.autoMove(-0.4, -0.4);
 			if(timePassed(0.75))
 				nextStep(0.2);
 			break;
-		case 6:
+		case 7:
 			gearMech.release();
 			nextStep(0.5);
 			break;
-		case 7:
+		case 8:
 			if(travel(-(2*12), 0.75))
 				nextStep(0.5);
 			break;
-		case 8:
+		case 9:
 			shooter.setRPM(rpm);
 			if(relTurn(15, 0.7)){
 				nextStep(0.5);
 				step++;
 			}
 			break;
-		case 9:
+		case 10:
 			shooter.setRPM(rpm);
 			if(travel(-(1*12+2), 0.75))
 				nextStep(0.5);
 			break;
-		case 10:
+		case 11:
 			shooter.setRPM(rpm);
 			try{
 				if(lineUpShooter(Direction.COUNTER_CLOCKWISE))
@@ -103,7 +107,7 @@ public class GearRight extends AutonomousBase{
 				endAuto();
 			}
 			break;
-		case 11:
+		case 12:
 			try{
 				if(autoShoot(6))
 					nextStep(0.5);
