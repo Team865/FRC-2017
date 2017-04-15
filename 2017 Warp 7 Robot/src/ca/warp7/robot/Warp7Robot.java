@@ -7,10 +7,10 @@ import static ca.warp7.robot.auto.AutonomousBase.autoPool;
 import ca.warp7.robot.auto.AutonomousBase;
 import ca.warp7.robot.auto.GearCentreBlue;
 import ca.warp7.robot.auto.GearCentreRed;
-import ca.warp7.robot.auto.GearLeft;
-import ca.warp7.robot.auto.GearRight;
-import ca.warp7.robot.auto.Nothing;
-import ca.warp7.robot.auto.RedGeorge;
+import ca.warp7.robot.auto.GearLeftBlue;
+import ca.warp7.robot.auto.GearLeftRed;
+import ca.warp7.robot.auto.GearRightBlue;
+import ca.warp7.robot.auto.GearRightRed;
 import ca.warp7.robot.controls.ControlsBase;
 import ca.warp7.robot.controls.DualRemote;
 import ca.warp7.robot.misc.DataPool;
@@ -89,17 +89,17 @@ public class Warp7Robot extends SampleRobot{
 	public void autonomous(){
 		
 		if(!s4.get())
-			auto = new GearCentreRed();
+			auto = new GearLeftBlue();//shoot
 		else if(!s5.get())
-			auto = new GearCentreBlue();
+			auto = new GearRightBlue();//non-shoot
 		else if(!s6.get())
-			auto = new GearRight();
+			auto = new GearCentreBlue();//shoot
 		else if(!s7.get())
-			auto = new GearLeft();
+			auto = new GearCentreRed();//shoot
 		else if(!s8.get())
-			auto = new RedGeorge();
+			auto = new GearLeftRed();//non-shoot
 		else
-			auto = new Nothing();
+			auto = new GearRightRed();//shoot
 		
 		while (isAutonomous() && isEnabled()) {
 			auto.periodic();

@@ -38,7 +38,7 @@ public class Constants {
 	public static double WHEEL_CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
 	public static int DRIVE_TICKS_PER_REV = 1024; //256
 	public static double DRIVE_INCHES_PER_TICK = WHEEL_CIRCUMFERENCE / DRIVE_TICKS_PER_REV;
-	public static double pixelOffset = -10;
+	public static double pixelOffset = -35;
 
     public static String ATTR_EX_MODE = "CameraAttributes::Exposure::Mode";
     public static String ATTR_EX_VALUE = "CameraAttributes::Exposure::Value";

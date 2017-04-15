@@ -32,7 +32,7 @@ public abstract class AutonomousBase {
 	public abstract void periodic();
 
 	public void reset(){
-		drive.autoMove(0, 0);
+		drive.moveRamped(0, 0);
 		stopShooter();
 		gearMech.hold();
 		drive.autoShift(false);
@@ -52,7 +52,7 @@ public abstract class AutonomousBase {
 		drive.autoMove(left, right);
 		
 		if(Math.abs(error) < 6){
-			drive.autoMove(0, 0);
+			drive.moveRamped(0, 0);
 			resetC = true;
 			return true;
 		}else{
@@ -133,7 +133,7 @@ public abstract class AutonomousBase {
 
 		if (Math.abs(error) < 3){
 			if(Math.abs(error) < 2)
-				drive.autoMove(0, 0);
+				drive.moveRamped(0, 0);
 			if(Math.abs(degrees-(drive.getRotation()-offset)) < 3)
 				done++;
 			else
@@ -259,7 +259,7 @@ public abstract class AutonomousBase {
 				Timer.delay(0.01);
 				temp = false;
 			}else{
-				drive.autoMove(0, 0);
+				drive.moveRamped(0, 0);
 				Timer.delay(0.01);
 				temp = true;
 			}
@@ -283,7 +283,7 @@ public abstract class AutonomousBase {
 			drive.autoMove(-0.3, -0.3);
 			Timer.delay(0.8);
 			if(!DataPool.getBooleanData("vision", "D_found") || Math.abs(DataPool.getDoubleData("vision", "D_right")) < 0.15){ // if we don't see the target... finish
-				drive.autoMove(0.0, 0.0);
+				drive.moveRamped(0, 0);
 				return true;
 			}
 		}
@@ -351,7 +351,7 @@ public abstract class AutonomousBase {
 	protected void nextStep(double delaySeconds){
 		step++;
 		resetValues();
-		drive.autoMove(0, 0);
+		drive.moveRamped(0, 0);
 		Timer.delay(delaySeconds);
 	}
 	

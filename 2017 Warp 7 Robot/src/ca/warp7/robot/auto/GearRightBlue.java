@@ -2,7 +2,7 @@ package ca.warp7.robot.auto;
 
 import ca.warp7.robot.Warp7Robot;
 
-public class GearRight extends AutonomousBase{
+public class GearRightBlue extends AutonomousBase{
 
 	double rpm = 4706;
 	@Override
@@ -13,15 +13,15 @@ public class GearRight extends AutonomousBase{
 		switch(step){
 		case 1:
 			gearMech.hold();
-			if(travel(6*12+6, 0.75))
+			if(travel(6*12+1, 0.75))
 				nextStep(0.2);
 			break;
 		case 2:
-			if(relTurn(-45, 0.7))
+			if(relTurn(-55, 0.7))
 				nextStep(0.2);
 			break;
 		case 3:
-			if(travel(3*12, 0.75))
+			if(travel(1*12, 0.75))
 				nextStep(0.1);
 			break;
 		case 4:
@@ -35,7 +35,6 @@ public class GearRight extends AutonomousBase{
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
-				endAuto();
 			}
 			if(timePassed(5)){
 				nextStep(0.0);
@@ -53,11 +52,13 @@ public class GearRight extends AutonomousBase{
 				if(gearMove()){
 					nextStep(0.2);
 					step++;
+					//endAuto();
 				}
 				
 				if(timePassed(4)){
-					gearMech.flippedyFlip();
+					//gearMech.flippedyFlip();
 					nextStep(0.0);
+					//endAuto();
 				}
 			}catch(Exception e){
 				System.err.println("NO JETSON!!!!!!");
@@ -70,55 +71,17 @@ public class GearRight extends AutonomousBase{
 			break;
 		case 6:
 			drive.autoMove(-0.4, -0.4);
-			if(timePassed(0.75))
+			if(timePassed(0.75)){
 				nextStep(0.2);
+			}
 			break;
 		case 7:
 			gearMech.release();
 			nextStep(0.5);
 			break;
 		case 8:
-			if(travel(-(2*12), 0.75))
+			if(travel(-(2*12), 0.4))
 				nextStep(0.5);
-			break;
-		case 9:
-			shooter.setRPM(rpm);
-			if(relTurn(15, 0.7)){
-				nextStep(0.5);
-				step++;
-			}
-			break;
-		case 10:
-			shooter.setRPM(rpm);
-			if(travel(-(1*12+2), 0.75))
-				nextStep(0.5);
-			break;
-		case 11:
-			shooter.setRPM(rpm);
-			try{
-				if(lineUpShooter(Direction.COUNTER_CLOCKWISE))
-					nextStep(0.5);
-			}catch(Exception e){
-				System.err.println("NO JETSON!!!!!!");
-				System.err.println("NO JETSON!!!!!!");
-				System.err.println("NO JETSON!!!!!!");
-				System.err.println("NO JETSON!!!!!!");
-				System.err.println("NO JETSON!!!!!!");
-				endAuto();
-			}
-			break;
-		case 12:
-			try{
-				if(autoShoot(6))
-					nextStep(0.5);
-			}catch(Exception e){
-				System.err.println("NO JETSON!!!!!!");
-				System.err.println("NO JETSON!!!!!!");
-				System.err.println("NO JETSON!!!!!!");
-				System.err.println("NO JETSON!!!!!!");
-				System.err.println("NO JETSON!!!!!!");
-				endAuto();
-			}
 			break;
 		default:
 			drive.autoMove(0, 0);

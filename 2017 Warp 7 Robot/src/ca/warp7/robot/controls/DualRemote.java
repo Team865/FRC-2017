@@ -29,10 +29,15 @@ public class DualRemote extends ControlsBase {
 			if(driver.getStickButton(kRight) == PRESSED)
 				drive.setDrivetrainReversed(!drive.driveReversed());
 				
-			if(driver.getTrigger(kRight) == DOWN)
+			if(driver.getTrigger(kRight) == DOWN){
 				gearMech.release();
-			else if(driver.getTrigger(kRight) == UP)
+				if(timePassed(0.125))
+					gearMech.flip(true);
+			}else if(driver.getTrigger(kRight) == UP){
 				gearMech.hold();
+				gearMech.flip(false);
+				timer = -1;
+			}
 			
 			if(operator.getBumper(kRight) == DOWN)
 				climber.setSpeed(-1.0);
@@ -49,13 +54,13 @@ public class DualRemote extends ControlsBase {
 			else if(operator.getTrigger(kLeft) == UP)
 				shooter.setRPM(0);
 
-			if(driver.getXButton() == PRESSED)
-					gearMech.flippedyFlip();
+		//	if(driver.getXButton() == PRESSED)
+		//			gearMech.flippedyFlip();
 			
 			double hop = 1.0;
 			double reverseHop = -1.0;
 			double tower = 1.0;
-			double slowTower = 0.4;
+			double slowTower = 0.5;
 			double intake = 1.0;
 			 if (operator.getDpad(90) == DOWN){
 				shooter.setHopperSpeed(reverseHop);

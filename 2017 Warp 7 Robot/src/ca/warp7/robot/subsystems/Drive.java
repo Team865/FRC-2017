@@ -157,8 +157,9 @@ public class Drive{
         }
         
 		if(shifter.get()) { // if low gear
-			leftDrive.set(left_pwm);
-			rightDrive.set(right_pwm);
+			//leftDrive.set(left_pwm);
+			//rightDrive.set(right_pwm);
+			moveRamped(left_pwm, right_pwm);
 		} else {
 			moveRamped(left_pwm, right_pwm);
 		}

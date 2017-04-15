@@ -12,7 +12,8 @@ public class GearCentreRed extends AutonomousBase {
 		
 		switch(step){
 		case 1:
-			if(travel(3*12, 0.75))
+			gearMech.hold();
+			if(travel(1*12, 0.75))
 				nextStep(0.1);
 			break;
 		case 2:
@@ -26,7 +27,6 @@ public class GearCentreRed extends AutonomousBase {
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
-				endAuto();
 			}
 			if(timePassed(5)){
 				nextStep(0.0);
@@ -47,7 +47,7 @@ public class GearCentreRed extends AutonomousBase {
 				}
 				
 				if(timePassed(4)){
-					gearMech.flippedyFlip();
+					//gearMech.flippedyFlip();
 					nextStep(0.0);
 				}
 			}catch(Exception e){
@@ -69,11 +69,11 @@ public class GearCentreRed extends AutonomousBase {
 			nextStep(0.5);
 			break;
 		case 6:
-			if(travel(-1*12, 0.4))
+			if(travel(-1.5*12, 0.4))
 				nextStep(0.2);
 			break;
 		case 7:
-			if(travel(-4*12, 0.8))
+			if(travel(-3.5*12, 0.8))
 				nextStep(0.2);
 			break;
 		case 8:

@@ -9,6 +9,7 @@ import ca.warp7.robot.subsystems.Climber;
 import ca.warp7.robot.subsystems.Drive;
 import ca.warp7.robot.subsystems.GearMech;
 import ca.warp7.robot.subsystems.Shooter;
+import edu.wpi.first.wpilibj.Timer;
 
 public abstract class ControlsBase {
 
@@ -33,5 +34,18 @@ public abstract class ControlsBase {
 	}
 	
 	abstract public void periodic();
+	
+	protected double timer = -1;
+	protected boolean timePassed(double seconds) {
+		if(timer <= 0)
+			timer = Timer.getFPGATimestamp();
+		
+		if(Timer.getFPGATimestamp() - timer >= seconds){
+			timer = -1;
+			return true;
+		}else{
+			return false;
+		}
+	}
     
 }
