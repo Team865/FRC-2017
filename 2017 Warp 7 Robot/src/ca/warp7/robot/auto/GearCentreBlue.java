@@ -13,14 +13,14 @@ public class GearCentreBlue extends AutonomousBase {
 		switch(step){
 		case 1:
 			gearMech.hold();
-			if(travel(1*12, 0.75))
+			if(travel(1*12))
 				nextStep(0.1);
 			break;
 		case 2:
 			drive.autoMove(-0.5, -0.5);
 			try{
 				if(gearGoalVisible())
-					nextStep(0.0);
+					nextStep();
 			}catch(Exception e){
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
@@ -41,14 +41,12 @@ public class GearCentreBlue extends AutonomousBase {
 			break;
 		case 3:
 			try{
-				if(gearMove()){
-					nextStep(0.2);
-					step++;
-				}
+				if(gearMove())
+					nextStep(0.2, 2);
 				
 				if(timePassed(4)){
 					//gearMech.flippedyFlip();
-					nextStep(0.0);
+					nextStep();
 				}
 			}catch(Exception e){
 				System.err.println("NO JETSON!!!!!!");
@@ -78,8 +76,8 @@ public class GearCentreBlue extends AutonomousBase {
 			break;
 		case 8:
 			shooter.setRPM(rpm);
-			if(relTurn(65, 0.6))
-				nextStep(0.0);
+			if(relTurn(65))
+				nextStep();
 			break;
 		case 9:
 			shooter.setRPM(rpm);
@@ -102,7 +100,7 @@ public class GearCentreBlue extends AutonomousBase {
 			break;
 		case 11:
 			try{
-				if(autoShoot(10))
+				if(visionShoot(10))
 					nextStep(0.0);
 			}catch(Exception e){
 				System.err.println("NO JETSON!!!!!!");
@@ -114,7 +112,6 @@ public class GearCentreBlue extends AutonomousBase {
 			}
 			break;
 		default:
-			drive.autoMove(0, 0);
 			reset();
 			break;
 		}

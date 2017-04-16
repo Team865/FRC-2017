@@ -16,19 +16,19 @@ public class HopperRed extends AutonomousBase{
 				nextStep(0.25);
 			break;
 		case 2:
-			if(relTurn(90, 0.7))
+			if(relTurn(90))
 				nextStep(0.15);
 			break;
 		case 3:
 			shooter.setIntakeSpeed(1.0);
 			if(travel(-38, 0.85))
-				nextStep(0.0);
+				nextStep();
 			break;
 		case 4:
 			drive.autoMove(0.5, 0.5);
 			if(timePassed(2.5)){
 				shooter.setIntakeSpeed(0.0);
-				nextStep(0.0);
+				nextStep();
 			}
 			break;
 		case 5:
@@ -38,8 +38,8 @@ public class HopperRed extends AutonomousBase{
 			break;
 		case 6:
 			shooter.setRPM(rpm);
-			if(relTurn(68, 0.7))
-				nextStep(0.0);
+			if(relTurn(68))
+				nextStep();
 			break;
 		case 7:
 			shooter.setRPM(rpm);
@@ -47,7 +47,7 @@ public class HopperRed extends AutonomousBase{
 				nextStep(0.15);
 			break;
 		case 8:
-			if(autoShoot(6))
+			if(visionShoot(6))
 				nextStep(0.5);
 			break;
 		default:

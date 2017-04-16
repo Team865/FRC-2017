@@ -39,29 +39,6 @@ public abstract class AutonomousBase {
 		resetValues();
 	}
 	
-	private boolean resetC = true;
-	private double offsetC = 0.0;
-	protected boolean fakeCurve(double left, double right, double degrees){
-		if(resetC){
-			offsetC = drive.getRotation();
-			resetC = false;
-		}
-		
-		double angle = drive.getRotation()-offsetC;
-		double error = degrees-angle;
-		drive.autoMove(left, right);
-		
-		if(Math.abs(error) < 6){
-			drive.moveRamped(0, 0);
-			resetC = true;
-			return true;
-		}else{
-			resetC = false;
-			return false;
-		}
-		
-	}
-	
 	protected void endAuto(){
 		step = -1;
 	}
@@ -70,20 +47,11 @@ public abstract class AutonomousBase {
 		return DataPool.getBooleanData("vision", "D_found");
 	}
 	
-	/**
-	 * @param degrees
-	 *            relative (0 is where you are)
-	 *            Positive is to the right
-	 */
-	private double errorOld = 0.0;
-	protected boolean absTurn(double degrees, double limit) {
-		degrees %= 360;
-		double error = degrees - drive.getRotation()%360;
-		
-		
-		return relTurn(error, limit);
+	protected boolean highGoalVisible() throws NullPointerException{
+		return DataPool.getBooleanData("vision", "S_found");
 	}
 	
+	private double errorOld = 0.0;
 	private boolean resetT = true;
 	private double offset = 0.0;
 	private double errorSum = 0.0;
@@ -151,6 +119,10 @@ public abstract class AutonomousBase {
 			resetT = false;
 			return false;
 		}
+	}
+	
+	protected boolean relTurn(double degrees){
+		return relTurn(degrees, 0.65);
 	}
 	
 	private boolean resetD = true;
@@ -236,6 +208,10 @@ public abstract class AutonomousBase {
 		}
 	}
 	
+	protected boolean travel(double toTravel){
+		return travel(toTravel, 0.75);
+	}
+	
 	private int sCounter = 0;
 	protected boolean lineUpShooter(Direction dir) throws NullPointerException{
 		if(visionTurn(dir)){
@@ -313,7 +289,7 @@ public abstract class AutonomousBase {
 	}
 	
 	private double rpm = 0.0;
-	protected boolean autoShoot(double seconds) throws NullPointerException{
+	protected boolean visionShoot(double seconds) throws NullPointerException{
 		if(rpm <= 0.0){
 			double pixelHeight = DataPool.getDoubleData("vision", "S_dist") + pixelOffset;
 			rpm = 0.018*Math.pow(pixelHeight, 2)-19.579*pixelHeight+9675.03;
@@ -348,11 +324,20 @@ public abstract class AutonomousBase {
 		}
 	}
 	
+	protected void nextStep(){
+		nextStep(0.0);
+	}
+	
 	protected void nextStep(double delaySeconds){
 		step++;
 		resetValues();
 		drive.moveRamped(0, 0);
 		Timer.delay(delaySeconds);
+	}
+	
+	protected void nextStep(double delaySeconds, int steps){
+		nextStep(delaySeconds);
+		step+=steps-1;
 	}
 	
 	private void resetValues(){
@@ -375,8 +360,6 @@ public abstract class AutonomousBase {
 		errorOld = 0.0;
 		sCounter = 0;
 		rpm = 0.0;
-		resetC = true;
-		offsetC = 0.0;
 	}
 	
 	protected enum Direction{
