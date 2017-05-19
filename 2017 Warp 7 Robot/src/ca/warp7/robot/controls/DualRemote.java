@@ -9,6 +9,7 @@ import static edu.wpi.first.wpilibj.GenericHID.Hand.kLeft;
 import static edu.wpi.first.wpilibj.GenericHID.Hand.kRight;
 
 import ca.warp7.robot.misc.DataPool;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
 public class DualRemote extends ControlsBase {
@@ -41,7 +42,9 @@ public class DualRemote extends ControlsBase {
 			
 			if(operator.getBumper(kRight) == DOWN)
 				climber.setSpeed(-1.0);
-			else if(operator.getBumper(kRight) == UP)
+			else if(operator.getBumper(kLeft) == DOWN)
+				climber.setSpeed(-0.4);
+			else
 				climber.setSpeed(0.0);
 			
 			if(operator.getBackButton() == PRESSED)
@@ -82,6 +85,7 @@ public class DualRemote extends ControlsBase {
 				shooter.setTowerSpeed(0.0);
 			}
 			
+			 //drive.tankDrive(driver.getY(Hand.kLeft), driver.getY(Hand.kLeft));
 			drive.cheesyDrive(-driver.getX(kRight), driver.getY(kLeft), driver.getBumper(kLeft) == DOWN, false, driver.getBumper(kRight) != DOWN);
 		}else if(operator.getYButton() == DOWN){
 			shooter.setIntakeSpeed(0.0);

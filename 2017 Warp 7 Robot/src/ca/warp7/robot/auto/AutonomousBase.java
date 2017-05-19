@@ -14,6 +14,7 @@ public abstract class AutonomousBase {
 
 	public int step;
 	public static DataPool autoPool = new DataPool("auto");
+	
 	protected Climber climber;
 	protected Drive drive;
 	protected GearMech gearMech;
@@ -58,48 +59,47 @@ public abstract class AutonomousBase {
 	private int counterR = 0;
 	private int done = 0;
 	/**
+	 * Rotate relative to current rotation
+	 * 
 	 * negative values turn counter clockwise, positive clockwise
 	 * 
 	 * @param degrees
 	 *            relative (0 is where you are)
 	 *            Positive is to the right
 	 */
-	protected boolean relTurn(double degrees, double limit) {
-		limit = Math.abs(limit);
+	protected boolean relTurn(double degrees, double maxSpeed) {
+		maxSpeed = Math.abs(maxSpeed);
 		if(resetT){
 			errorSum = 0.0;
 			offset = drive.getRotation();
 			counterR = 0;
 			done = 0;
 		}
-
-		//degrees -= 10;
-		//8,16,0
 		
 		double angle = drive.getRotation()-offset;
 		double kp = 8.0;
 		double kd = 20.0;
 		double ki = 0.00075;
 		
-		double error = degrees-angle;
+		double error = degrees - angle;
 		double speed = (kp*error/180) + ((error-errorOld)*kd/180) + (errorSum*ki/180);
 		if(Math.abs(error) < 1)speed = 0;
 		
 		autoPool.logDouble("gyro error", error);
 		autoPool.logBoolean("Turn in Tolerance", Math.abs(error) < 3);
 				
-		speed = Math.max(-limit, Math.min(limit, speed));
+		speed = Math.max(-maxSpeed, Math.min(maxSpeed, speed));
 		drive.autoMove(speed, -speed);
 		errorOld = error;
 		
 		errorSum += error;
-		
+
 		if(counterR >= 1000)
 			errorSum = 0.0;
 		
 		counterR++;
-
-		if (Math.abs(error) < 3){
+		
+		if(Math.abs(error) < 3){
 			if(Math.abs(error) < 2)
 				drive.moveRamped(0, 0);
 			if(Math.abs(degrees-(drive.getRotation()-offset)) < 3)
@@ -121,6 +121,22 @@ public abstract class AutonomousBase {
 		}
 	}
 	
+	protected boolean relTurn(double degrees, Direction dir, double maxSpeed){
+		if(dir == Direction.CLOCKWISE){
+			return relTurn(degrees, maxSpeed);
+		}else{
+			return relTurn(-degrees, maxSpeed);
+		}
+	}
+	
+	protected boolean relTurn(double degrees, Direction dir){
+		if(dir == Direction.CLOCKWISE){
+			return relTurn(degrees, 0.65);
+		}else{
+			return relTurn(-degrees, 0.65);
+		}
+	}
+	
 	protected boolean relTurn(double degrees){
 		return relTurn(degrees, 0.65);
 	}
@@ -136,7 +152,7 @@ public abstract class AutonomousBase {
 	private double oldErrorR = 0.0;
 	private int doneT = 0;
 	/**
-	 * call recursively
+	 * Drive a distance straight
 	 * 
 	 * @param toTravel in inches
 	 * @return if it is done
@@ -152,17 +168,11 @@ public abstract class AutonomousBase {
 			doneT = 0;
 		}
 		
-		/*
-		double kp = 2;
-		double kd = 0.1;
-		double ki = 0.0001;
-		*/
-		
 		double kp = 64;
 		double leftPAdd = 0.0;
 		double kd = 0.0;
 		double ki = 0.0;
-		
+
 		double errorL = toTravel - (drive.getLeftDistance()-lStart);
 		double errorR = toTravel - (drive.getRightDistance()-rStart);
 		sumL += errorL;
@@ -170,17 +180,17 @@ public abstract class AutonomousBase {
 		autoPool.logDouble("errorL", errorR);
 		autoPool.logDouble("errorR", errorL);
 		double speedL = (kp*errorL)/Math.abs(lStart+distance) + ((errorL-oldErrorL)*kd/Math.abs(lStart+distance))+ki*sumL;
-		double speedR = ((leftPAdd + kp)*errorR)/Math.abs(rStart+distance) + ((errorR-oldErrorR)*kd/Math.abs(rStart+distance))+ki*sumR;
+		double speedR = ((leftPAdd+kp)*errorR)/Math.abs(rStart+distance) + ((errorR-oldErrorR)*kd/Math.abs(rStart+distance))+ki*sumR;
 		if(Math.abs(errorL) < 0.3)speedL = 0;
 		if(Math.abs(errorR) < 0.3)speedR = 0;
-		
+			
 		autoPool.logBoolean("L Encoder in Tolerance", Math.abs(errorR) < 0.3);
 		autoPool.logBoolean("R Encoder in Tolerance", Math.abs(errorL) < 0.3);
-		
-		speedL = Math.max(-maxSpeed,  Math.min(maxSpeed, speedL));
+
+		speedL = Math.max(-maxSpeed, Math.min(maxSpeed, speedL));
 		speedR = Math.max(-maxSpeed, Math.min(maxSpeed, speedR));
 		
-		drive.autoMove(-speedL, -speedR);
+		drive.autoMove(-speedL,  -speedR);
 		oldErrorL = errorL;
 		oldErrorR = errorR;
 		
@@ -189,7 +199,7 @@ public abstract class AutonomousBase {
 			sumR = 0.0;
 		}
 		
-		if(Math.abs(errorL) < 0.3 && Math.abs(errorR) < 0.3){	
+		if(Math.abs(errorL) < 0.3 && Math.abs(errorR) < 0.3){
 			if(Math.abs(toTravel - (drive.getLeftDistance()-lStart)) < 0.3 && Math.abs(toTravel - (drive.getRightDistance()-rStart)) < 0.3)
 				doneT++;
 			else

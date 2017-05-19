@@ -35,13 +35,12 @@ public class Warp7Robot extends SampleRobot{
 	public static Compressor compressor;
 	public static VisionCommand vision;
 	
-	@SuppressWarnings("unused")
-	private static DataPool visionPool;
 	private static AutonomousBase auto;
 	private static ControlsBase controls;
 	
 	private DriverStation driverStation;
 	public static Solenoid light;
+	
 	private DigitalInput s4;
 	private DigitalInput s5;
 	private DigitalInput s6;
@@ -58,7 +57,6 @@ public class Warp7Robot extends SampleRobot{
 		gearMech = new GearMech();
 		compressor = new Compressor(COMPRESSOR_PIN);
 		
-		visionPool = new DataPool("vision");
 		vision = VisionCommand.OFF;
 		
 		driverStation = DriverStation.getInstance();
@@ -87,7 +85,7 @@ public class Warp7Robot extends SampleRobot{
 	}
 	
 	public void autonomous(){
-		
+		// top
 		if(!s4.get())
 			auto = new GearLeftBlue();//shoot
 		else if(!s5.get())
@@ -100,6 +98,7 @@ public class Warp7Robot extends SampleRobot{
 			auto = new GearLeftRed();//non-shoot
 		else
 			auto = new GearRightRed();//shoot
+		// bottom
 		
 		while (isAutonomous() && isEnabled()) {
 			auto.periodic();
@@ -117,17 +116,6 @@ public class Warp7Robot extends SampleRobot{
 	
 	public void periodic(){
 		drive.periodic();
-		
-		/*
-		visionPool.logData("command", vision.name());
-		boolean light;
-		try{
-			light = DataPool.getBooleanData("vision", "light");
-		}catch(Exception e){
-			light = false;
-		}
-		this.light.set(light);
-		*/
 		
 		try{
 			light.set(true);

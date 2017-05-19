@@ -20,7 +20,7 @@ public class Constants {
 	public static final int FLIP_PORT = 4;
 	public static final int DRIVE_SHIFTER_PORT = 1;
 	public static final int GEAR_PISTON_PORT = 0;
-	public static final int LIGHT_PORT = 6;
+	public static final int LIGHT_PORT = 7;
 	
 	// Compressor
 	public static final int COMPRESSOR_PIN = 0;

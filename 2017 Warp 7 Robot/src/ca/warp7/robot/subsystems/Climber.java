@@ -14,10 +14,12 @@ public class Climber {
 		climbMotors = new MotorGroup(CLIMBER_MOTOR_PINS, VictorSP.class);
 	}
 	
+	private double ramp = 0.0;
 	public void setSpeed(double speed){
-		double delta = speed-climbMotors.get();
-		
-		// Make it increase over time
-		climbMotors.set(climbMotors.get() + delta * 0.2);
+		// Ramp to prevent brown outs
+		double rampSpeed = 6;
+		ramp += (speed - ramp)/rampSpeed;
+		climbMotors.set(ramp);
 	}
+	
 }

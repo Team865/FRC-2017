@@ -31,8 +31,7 @@ public class GearMech {
 	}
 	
 	public void flip(boolean b){
-		if(flipPiston.get() != b)
-			flipPiston.set(b);
+		flipPiston.set(b);
 	}
 	
 	public void flippedyFlip(){

@@ -33,6 +33,9 @@ public class Shooter {
 		hopperSpin.setInverted(true);
 		towerSpin = new MotorGroup(TOWER_SPIN_PINS, VictorSP.class);
 		intake = new MotorGroup(INTAKE_SPIN_PINS, VictorSP.class);
+		photoSensor = new DigitalInput(PHOTOSENSOR_PIN);
+		shooterPool = new DataPool("Shooter");
+
 		
 		slaveTalon = new CANTalon(SHOOTER_SLAVE_ID);
 		masterTalon = new CANTalon(SHOOTER_MASTER_ID);
@@ -52,14 +55,6 @@ public class Shooter {
 		masterTalon.setP(0.2);
 		masterTalon.setI(0.00035);
 		masterTalon.setD(12);
-		
-		//p = 0.175, i = 0.00009, d = 4
-		//p = 0.08, I = 0.000125, D = 2, 12.2 v idle, 0.6 tower w/ velcrow // 50 in 4.5 in rot on the back, left motor only, no fly wheel
-		//p = 0.08, I = 0.00015, D = 2, 12.2 v idle, 0.6 tower w/ velcrow // 50 in 4.5 in rot on the back, both motors, no fly wheel
-		
-		photoSensor = new DigitalInput(PHOTOSENSOR_PIN);
-		
-		shooterPool = new DataPool("Shooter");
 	}
 	
 	public void setRPM(double targetSpeed){
@@ -95,18 +90,15 @@ public class Shooter {
 	}
 	
 	public void setHopperSpeed(double speed){
-		//if(hopperSpin.get() != speed)
-			hopperSpin.set(speed);
+		hopperSpin.set(speed);
 	}
 	
 	public void setTowerSpeed(double speed){
-		//if(towerSpin.get() != speed)
-			towerSpin.set(speed);
+		towerSpin.set(speed);
 	}
 	
 	public void setIntakeSpeed(double speed){
-		//if(intake.get() != speed)
-			intake.set(speed);
+		intake.set(speed);
 	}
 
 	public boolean getSensor(){

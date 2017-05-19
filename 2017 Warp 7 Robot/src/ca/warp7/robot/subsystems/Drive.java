@@ -168,9 +168,9 @@ public class Drive{
 	private double leftRamp = 0.0;
 	private double rightRamp = 0.0;
 	public void moveRamped(double desiredLeft, double desiredRight) {
-		double ramp_speed = 6;
-		leftRamp += (desiredLeft - leftRamp) / ramp_speed;
-		rightRamp += (desiredRight - rightRamp) / ramp_speed;
+		double rampSpeed = 6;
+		leftRamp += (desiredLeft - leftRamp) / rampSpeed;
+		rightRamp += (desiredRight - rightRamp) / rampSpeed;
 		leftDrive.set(leftRamp);
 		rightDrive.set(rightRamp);
 	}

@@ -12,15 +12,12 @@ public class GearCentreBlue extends AutonomousBase {
 		
 		switch(step){
 		case 1:
-			gearMech.hold();
-			if(travel(1*12))
-				nextStep(0.1);
-			break;
-		case 2:
 			drive.autoMove(-0.5, -0.5);
 			try{
-				if(gearGoalVisible())
+				if(gearGoalVisible()){
+					System.err.println("Found Jetson");
 					nextStep();
+				}
 			}catch(Exception e){
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
@@ -39,7 +36,7 @@ public class GearCentreBlue extends AutonomousBase {
 			}
 			gearMech.hold();
 			break;
-		case 3:
+		case 2:
 			try{
 				if(gearMove())
 					nextStep(0.2, 2);
@@ -57,34 +54,34 @@ public class GearCentreBlue extends AutonomousBase {
 				endAuto();
 			}
 			break;
-		case 4:
-			drive.autoMove(-0.4, -0.4);
+		case 3:
+			drive.autoMove(-0.8, -0.8);
 			if(timePassed(0.75))
 				nextStep(0.2);
 			break;
-		case 5:
+		case 4:
 			gearMech.release();
 			nextStep(0.5);
 			break;
-		case 6:
+		case 5:
 			if(travel(-1.5*12, 0.4))
 				nextStep(0.2);
 			break;
-		case 7:
+		case 6:
 			if(travel(-3.5*12, 0.8))
 				nextStep(0.2);
 			break;
-		case 8:
+		case 7:
 			shooter.setRPM(rpm);
 			if(relTurn(65))
 				nextStep();
 			break;
-		case 9:
+		case 8:
 			shooter.setRPM(rpm);
 			if(travel(-2*12, 0.85))
 				nextStep(0.2);
 			break;
-		case 10:
+		case 9:
 			shooter.setRPM(rpm);
 			try{
 				if(lineUpShooter(Direction.CLOCKWISE))
@@ -98,7 +95,7 @@ public class GearCentreBlue extends AutonomousBase {
 				endAuto();
 			}
 			break;
-		case 11:
+		case 10:
 			try{
 				if(visionShoot(10))
 					nextStep(0.0);

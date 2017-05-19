@@ -21,14 +21,12 @@ public class GearLeftRed extends AutonomousBase{
 				nextStep(0.2);
 			break;
 		case 3:
-			if(travel(1*12))
-				nextStep(0.1);
-			break;
-		case 4:
 			drive.autoMove(-0.5, -0.5);
 			try{
-				if(gearGoalVisible())
+				if(gearGoalVisible()){
 					nextStep();
+					System.err.println("Found Jetson");
+				}
 			}catch(Exception e){
 				System.err.println("NO JETSON!!!!!!");
 				System.err.println("NO JETSON!!!!!!");
@@ -47,7 +45,7 @@ public class GearLeftRed extends AutonomousBase{
 			}
 			gearMech.hold();
 			break;
-		case 5:
+		case 4:
 			try{
 				if(gearMove()){
 					nextStep(0.2, 2);
@@ -69,17 +67,25 @@ public class GearLeftRed extends AutonomousBase{
 				endAuto();
 			}
 			break;
-		case 6:
-			drive.autoMove(-0.4, -0.4);
+		case 5:
+			drive.autoMove(-0.8, -0.8);
 			if(timePassed(0.75))
 				nextStep(0.2);
 			break;
-		case 7:
+		case 6:
 			gearMech.release();
 			nextStep(0.5);
 			break;
+		case 7:
+			if(travel(-(3*12), 0.4))
+				nextStep(0.25);
+			break;
 		case 8:
-			if(travel(-(2*12), 0.4))
+			if(relTurn(-55))
+				nextStep(0.2);
+			break;
+		case 9:
+			if(travel(15*12))
 				nextStep(0.5);
 			break;
 		default:
