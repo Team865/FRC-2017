@@ -21,36 +21,42 @@ public class SingleRemote extends ControlsBase{
 
 	@Override
 	public void periodic() {
-		if(driver.getTrigger(kLeft) == UP){ // are we doing gear auto stuff
+		if(driver.getTrigger(kLeft) == UP || true){ // are we doing gear auto stuff
 			
 			if(driver.getStickButton(kRight) == PRESSED)
 				drive.setDrivetrainReversed(!drive.driveReversed());
 			
-			if(driver.getTrigger(kRight) == DOWN)
+			if(driver.getTrigger(kRight) == DOWN){
 				gearMech.release();
-			else if(driver.getTrigger(kRight) == UP)
+				if(timePassed(0.125))
+					gearMech.flip(true);
+			}else if(driver.getTrigger(kRight) == UP){
 				gearMech.hold();
+				gearMech.flip(false);
+				timer = -1;
+			}
 			
 			if(driver.getYButton() == DOWN)
 				climber.setSpeed(-1.0);
-			else if(driver.getYButton() == UP)
+			else if(driver.getXButton() == DOWN)
+				climber.setSpeed(-0.4);
+			else
 				climber.setSpeed(0.0);
 			
 			if(driver.getBackButton() == PRESSED)
 				compressor.setClosedLoopControl(!compressor.getClosedLoopControl());	
 			
 			if(driver.getBButton() == DOWN)
+				shooter.setRPM(4425);
+			else if(driver.getDpad(270) == DOWN)
 				shooter.setRPM(rpm);
 			else if(driver.getBButton() == UP)
 				shooter.setRPM(0);
 			
-			if(driver.getXButton() == PRESSED)
-				gearMech.flippedyFlip();	
-			
-			double hop = 0.7;
-			double reverseHop = -0.6;
+			double hop = 1.0;
+			double reverseHop = -1.0;
 			double tower = 1.0;
-			double slowTower = 0.4;
+			double slowTower = 0.5;
 			double intake = 1.0;
 			 if (driver.getDpad(90) == DOWN){
 				shooter.setHopperSpeed(reverseHop);
@@ -59,7 +65,7 @@ public class SingleRemote extends ControlsBase{
 			}else if(driver.getAButton() == DOWN){
 				shooter.setHopperSpeed(hop);
 				shooter.setIntakeSpeed(intake);
-				if(shooter.withinRange(40) && shooter.getSetPoint() > 0.0){
+				if(shooter.withinRange(25) && shooter.getSetPoint() > 0.0){
 					shooter.setTowerSpeed(tower);
 				}else if(shooter.getSensor()){
 					shooter.setTowerSpeed(slowTower);
@@ -79,7 +85,7 @@ public class SingleRemote extends ControlsBase{
 			else if (driver.getDpad(180) == DOWN)
 				rpm -= 5;
 			else if (driver.getDpad(270) == DOWN)
-				rpm = 4450;
+				rpm = 4425;
 			 */
 			 
 			//drive.tankDrive(driver.getY(kLeft), driver.getY(kRight));
