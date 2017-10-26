@@ -11,6 +11,9 @@ import ca.warp7.robot.auto.GearLeftBlue;
 import ca.warp7.robot.auto.GearLeftRed;
 import ca.warp7.robot.auto.GearRightBlue;
 import ca.warp7.robot.auto.GearRightRed;
+import ca.warp7.robot.auto.BaseLine;
+import ca.warp7.robot.auto.RedGeorgian;
+import ca.warp7.robot.auto.BlueGeorgian;
 import ca.warp7.robot.controls.ControlsBase;
 import ca.warp7.robot.controls.DualRemote;
 import ca.warp7.robot.misc.DataPool;
@@ -25,6 +28,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
+
 
 public class Warp7Robot extends SampleRobot{
 	
@@ -87,7 +91,8 @@ public class Warp7Robot extends SampleRobot{
 	public void autonomous(){
 		// top
 		if(!s4.get())
-			auto = new GearLeftBlue();//shoot
+			auto = new BlueGeorgian();
+			//auto = new GearLeftBlue();//shoot
 		else if(!s5.get())
 			auto = new GearRightBlue();//non-shoot
 		else if(!s6.get())
@@ -95,9 +100,11 @@ public class Warp7Robot extends SampleRobot{
 		else if(!s7.get())
 			auto = new GearCentreRed();//shoot
 		else if(!s8.get())
-			auto = new GearLeftRed();//non-shoot
+			auto = new BaseLine();
+			//auto = new GearLeftRed();//non-shoot
 		else
-			auto = new GearRightRed();//shoot
+			auto = new RedGeorgian();
+			//auto = new GearRightRed();//shoot
 		// bottom
 		
 		while (isAutonomous() && isEnabled()) {

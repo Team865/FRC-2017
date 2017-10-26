@@ -17,7 +17,7 @@ public class GearRightBlue extends AutonomousBase{
 				nextStep(0.2);
 			break;
 		case 2:
-			if(relTurn(-55))
+			if(relTurn(-50))//was -55 changed cause overshoot 
 				nextStep(0.2);
 			break;
 		case 3:

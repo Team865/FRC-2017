@@ -10,11 +10,11 @@ public class BlueGeorgian extends AutonomousBase {
 				nextStep();
 			break;
 		case 2:
-			if(travel(4*12))
+			if(travel(2*12))
 				nextStep();
 			break;
 		case 3:
-			if(relTurn(67))
+			if(relTurn(50))
 				nextStep();
 			break;		
 		case 4:
